@@ -26,22 +26,20 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 	Board inboard;
 	int numberOfMoves;
 	int levelNo;
-	MouseListener ml;
-	MouseMotionListener mml;
 	boolean x;
 	boolean win;
 	//Timer myTimer = new Timer();
-	
 	public Clip myClip;
 	boolean mute;
 	File file = new File("OffLimits.wav");
 	Stack<Board> Q;
-	
+	int endGame;
 	//
 	JButton undoButton = new JButton("UNDO");;
 	JButton muteButton = new JButton( "MUTE");;
 	
 	public GameEngine(Board board, int level) {
+		endGame = -15;
 		numberOfMoves = 0;
 		this.board = board;
 		System.out.println("The initial board");
@@ -50,7 +48,7 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 		System.out.println("size  " + Q.size());
 		Q.push(board);
 		System.out.println("new Size: "+ Q.size());
-		setBackground(Color.yellow);
+		setBackground(Color.white);
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setLayout(null);
@@ -58,10 +56,12 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 		
 		undoButton.setText("UNDO");
 		muteButton.setText("MUTE");
-		
+		undoButton.setBackground(Color.yellow);
+		undoButton.setForeground(Color.red);
 		undoButton.addActionListener(this);
 		muteButton.addActionListener(this);
-		
+		muteButton.setBackground(Color.yellow);
+		muteButton.setForeground(Color.red);
 		undoButton.setBounds(550,50,100,50);
 		muteButton.setBounds(550,200,100,50);
 		add(undoButton);
@@ -80,13 +80,57 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 		}
 		System.out.println("\n");
 	}
-
+	
+	public void checkWin() throws IOException {
+		if(win) {
+			
+			Object[] options = {"Turn back to main",
+                    "Next Level",
+                    "EXIT"};
+			endGame = JOptionPane.showOptionDialog(null,options,
+					"WIN!\nYou finished in "+ numberOfMoves + " number of moves",
+							JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,
+								null,
+								options,
+								options[2]);
+			System.out.println(endGame);
+			
+			myClip.stop();
+			if(endGame == 0)
+	    	{
+				this.setVisible(false);
+	    		try {
+					main newGame = new main();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    	}
+	    	if(endGame==1) {
+	    		this.setVisible(false);
+	    		LevelSelection selection = new LevelSelection(2);
+	    	}
+	    	if(endGame==2) {
+	    		this.setVisible(false);
+	    		System.exit(0);
+	    	}	
+			return;
+		}	    
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Image boardImage = new ImageIcon("board.png").getImage();
 		g.drawImage(boardImage, 0, 0, 450, 450, this);
-	
+		
+		try {
+			checkWin();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for (int i = 0; i < 6; i++)
 			for (int j = 0; j < 6; j++)
 
@@ -112,7 +156,7 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 
 						else if (tempt.size == 2) {// if car is size 2 // 2
 							Image car = new ImageIcon("6.png").getImage();
-							g.drawImage(car, j * 75, i * 75, 150, 75, this);
+							g.drawImage(car, j * 75, i * 75, 140, 75, this);
 							j++;
 						} else if (tempt.size == 3) {// if car is size 3
 							Image car = new ImageIcon("4.png").getImage();
@@ -139,13 +183,13 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 						}
 				}	
 				repaint();
-		if(win) {
+		/*if(win) {
 			this.setVisible(false);
 			undoButton.setVisible(false);
 			muteButton.setVisible(false);
 			myClip.stop();
 	    	JOptionPane.showMessageDialog(null, "WIN! \nYou finished in " + numberOfMoves +" number of moves");
-		}
+		}*/
 	}
 	
 	
@@ -174,9 +218,12 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 		    		play(file,mute);
 		    		return;
 		    	}  				    	
+		    	   
 		    	repaint();
+		    	
 		    }
 	}
+
 	
 	@Override
 	public void mouseMoved(MouseEvent e) {

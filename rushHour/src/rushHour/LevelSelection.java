@@ -1,37 +1,56 @@
 package rushHour;
 
+import java.awt.Color;
 import java.util.Scanner;
 import javax.swing.JFrame;
 
 public class LevelSelection {
+	GameEngine engine;
+	JFrame f;
+     public LevelSelection(int x) {
+    	System.out.println("Welcome to the rush hour");
+    	engine = this.engine;
+ 		Board board = new Board();
 
+ 		if (x == 1) {
+ 			board.setCar(0, 1, 0, 0, 0);
+ 			board.setCar(0, 0, 1, 2, 0);
+ 			board.setCar(0, 1, 3, 3, 0);
+ 			board.setCar(1, 2, 2, 2, 0);
+ 			board.setCar(2, 2, 0, 1, 1);
+ 			board.setCar(3, 3, 0, 1, 0);
+ 			board.setCar(3, 3, 2, 3, 0);
+ 			board.setCar(2, 4, 5, 5, 0);
+ 			board.setCar(3, 5, 4, 4, 0);
+ 			board.setObstacle(1, 5);
+ 			engine = new GameEngine(board, 1);
+ 		} else {
+ 			board.setCar(0, 0, 0, 1, 0);
+ 			board.setCar(0, 1, 2, 2, 0);
+ 			board.setCar(0, 1, 3, 3, 0);
+ 			board.setCar(0, 0, 4, 5, 0);
+ 			board.setCar(1, 1, 0, 1, 1);
+ 			board.setCar(2, 2, 2, 3, 0);
+ 			board.setCar(1, 2, 4, 4, 0);
+ 			board.setCar(1, 2, 5, 5, 0);
+ 			board.setCar(2, 4, 1, 1, 0);
+ 			board.setCar(5, 5, 3, 5, 0);
+ 			board.setObstacle(4, 2);
+ 			engine = new GameEngine(board, 2);
+ 		}
+ 		//S.close();
+ 		f= new JFrame("Rush Hour");
+ 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+ 		f.add(engine);
+ 		f.setSize(700,485);
+ 		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+		
+     }
+     
 	public static void main(String[] args) {
 		System.out.println("Welcome to the rush hour");
-		System.out.println("Please enter the level you wanna play 1-2");
-		Scanner S = new Scanner(System.in);
-		int x = S.nextInt();
-		GameEngine engine;
-		Board board = new Board();
-
-		if (x == 1) {
-			board.setCar(0, 0, 0, 2, 0);
-			board.setCar(2, 4, 3, 3, 0);
-			board.setCar(2, 2, 0, 1, 1);
-			board.setObstacle(0, 4);
-			engine = new GameEngine(board, 1);
-		} else {
-			board.setCar(2, 4, 1, 1, 0);
-			board.setCar(4, 4, 3, 5, 0);
-			board.setCar(0, 0, 2, 3, 1);
-			board.setObstacle(0, 4);
-			engine = new GameEngine(board, 2);
-		}
-		S.close();
-		JFrame f = new JFrame("Rush Hour");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.add(engine);
-		f.setSize(700,485);
-		f.setVisible(true);
+		LevelSelection selection = new LevelSelection(1);		
 	}
 
 }
