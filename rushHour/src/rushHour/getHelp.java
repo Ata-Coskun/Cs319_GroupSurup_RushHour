@@ -27,7 +27,7 @@ public class getHelp extends JPanel implements MouseListener, MouseMotionListene
 			JFrame f2 = new JFrame("How to Play");
 			JPanel panelX = new JPanel();
 			f2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			f2.setBounds(900, 800, 900, 800);
+			f2.setBounds(800, 700, 700, 700);
 			f2.setVisible(true);
 			f2.setSize(1000, 1000);
 			 BufferedImage logoGame = ImageIO.read(new File("help.png"));
