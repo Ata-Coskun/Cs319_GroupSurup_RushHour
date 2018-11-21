@@ -30,7 +30,7 @@ public class getHelp extends JPanel implements MouseListener, MouseMotionListene
 			f2.setBounds(900, 800, 900, 800);
 			f2.setVisible(true);
 			f2.setSize(1000, 1000);
-			 BufferedImage logoGame = ImageIO.read(new File("C:\\Users\\chary\\Desktop\\rushHour\\help.png"));
+			 BufferedImage logoGame = ImageIO.read(new File("help.png"));
 			 JLabel logoLabel= new JLabel(new ImageIcon(logoGame));
 			 logoLabel.setBounds(900, 800, 900, 800);
 			 panelX.add(logoLabel);

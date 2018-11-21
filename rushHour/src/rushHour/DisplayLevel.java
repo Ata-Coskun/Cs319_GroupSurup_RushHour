@@ -37,9 +37,9 @@ public class DisplayLevel extends JPanel implements MouseListener, MouseMotionLi
 		btn2.addActionListener(this);
 		btn2.setBounds(100,500,300,300);
 		//level1 
-		btn.setIcon(new ImageIcon("C:\\Users\\chary\\Desktop\\rushHour\\level1.png"));
+		btn.setIcon(new ImageIcon("level1.png"));
 		//level2
-		btn2.setIcon(new ImageIcon("C:\\Users\\chary\\Desktop\\rushHour\\level2.png"));
+		btn2.setIcon(new ImageIcon("level2.png"));
 		//texts
 
 				JLabel label1 = new JLabel("Level 1 Score: 100 " );
@@ -51,7 +51,7 @@ public class DisplayLevel extends JPanel implements MouseListener, MouseMotionLi
 		//score star image example
 		BufferedImage toScore = null;
 		try {
-			toScore = ImageIO.read(new File("C:\\Users\\chary\\Desktop\\rushHour\\star.png"));
+			toScore = ImageIO.read(new File("star.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,7 +64,7 @@ public class DisplayLevel extends JPanel implements MouseListener, MouseMotionLi
 		 f = new JFrame("Select Levels");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setLocationRelativeTo(null);
-		BufferedImage img = ImageIO.read(new File("C:\\Users\\chary\\Desktop\\rushHour\\background.png"));
+		BufferedImage img = ImageIO.read(new File("background.png"));
 		 f.setContentPane(new JLabel(new ImageIcon(img)));
 		 GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;

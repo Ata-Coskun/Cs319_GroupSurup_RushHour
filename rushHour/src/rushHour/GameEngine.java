@@ -71,15 +71,7 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 		
 	}
 
-	void paint() {
-		for (int i = 0; i < 6; i++) {
-			for (int j = 0; j < 6; j++) {
-				System.out.print(board.coordinates[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println("\n");
-	}
+
 	
 	public void checkWin() throws IOException {
 		if(win) {
@@ -87,7 +79,7 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 			Object[] options = {"Turn back to main",
                     "Next Level",
                     "EXIT"};
-			endGame = JOptionPane.showOptionDialog(null,options,
+			endGame = JOptionPane.showOptionDialog(null,"WIN!\nYou finished in "+ numberOfMoves + " number of moves",
 					"WIN!\nYou finished in "+ numberOfMoves + " number of moves",
 							JOptionPane.YES_NO_CANCEL_OPTION,
 								JOptionPane.QUESTION_MESSAGE,
@@ -112,7 +104,6 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 	    		LevelSelection selection = new LevelSelection(2);
 	    	}
 	    	if(endGame==2) {
-	    		this.setVisible(false);
 	    		System.exit(0);
 	    	}	
 			return;

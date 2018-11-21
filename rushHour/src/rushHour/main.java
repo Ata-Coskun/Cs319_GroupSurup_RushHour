@@ -40,7 +40,7 @@ public class main implements ActionListener  {
 		 playBtn = new JButton();
 		 settingsBtn = new JButton();
 		 credits = new JButton();
-		 logoGame = ImageIO.read(new File("C:\\Users\\chary\\Desktop\\rushHour\\Logo11.png"));
+		 logoGame = ImageIO.read(new File("Logo11.png"));
 		 logoLabel= new JLabel(new ImageIcon(logoGame));
 		 f3 = new JFrame("Rush Hour");
 		 
@@ -56,6 +56,7 @@ public class main implements ActionListener  {
 			settingsBtn.setBounds(350, 350, 300, 100);
 			settingsBtn.setForeground(Color.red);
 			settingsBtn.setBackground(Color.ORANGE);
+			settingsBtn.addActionListener(this);
 
 			getHelpBtn.setVisible(true);
 			getHelpBtn.setBounds(350,500,300,100);
@@ -119,6 +120,17 @@ public class main implements ActionListener  {
 				
 				DisplayLevel level =  new DisplayLevel();
 				f3.setVisible(false); //you can't see me!
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(evt.getSource() == settingsBtn)
+		{
+			try {
+				
+				Settings settings =  new Settings();
+				f3.setVisible(false); 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
