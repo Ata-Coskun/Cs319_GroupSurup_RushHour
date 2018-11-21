@@ -1,4 +1,5 @@
 package rushHour;
+
 import java.util.Scanner;
 import javax.swing.JFrame;
 
@@ -11,15 +12,14 @@ public class LevelSelection {
 		int x = S.nextInt();
 		GameEngine engine;
 		Board board = new Board();
-		
-		if(x == 1) {
+
+		if (x == 1) {
 			board.setCar(0, 0, 0, 2, 0);
 			board.setCar(2, 4, 3, 3, 0);
 			board.setCar(2, 2, 0, 1, 1);
 			board.setObstacle(0, 4);
 			engine = new GameEngine(board, 1);
-		}
-		else {
+		} else {
 			board.setCar(2, 4, 1, 1, 0);
 			board.setCar(4, 4, 3, 5, 0);
 			board.setCar(0, 0, 2, 3, 1);
@@ -30,8 +30,8 @@ public class LevelSelection {
 		JFrame f = new JFrame("Rush Hour");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.add(engine);
-		f.setSize(465, 485);
+		f.setSize(700,485);
 		f.setVisible(true);
 	}
-	
+
 }

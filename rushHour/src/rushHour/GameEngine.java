@@ -1,6 +1,6 @@
 package rushHour;
 
-import java.awt.Color;
+import java.awt.Color; 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -9,22 +9,66 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-public class GameEngine extends JPanel implements MouseListener, MouseMotionListener {
+import javax.sound.sampled.*;
+import java.net.URL;
+import java.io.*;
+public class GameEngine extends JPanel implements MouseListener, MouseMotionListener,ActionListener {
 	static int xDragged = 0, yDragged = 0;
 	static int xClicked = 0, yClicked = 0;
 	Board board;
+	Board inboard;
 	int numberOfMoves;
 	int levelNo;
 	MouseListener ml;
 	MouseMotionListener mml;
 	boolean x;
 	boolean win;
-
+	//Timer myTimer = new Timer();
+	
+	public Clip myClip;
+	boolean mute;
+	File file = new File("OffLimits.wav");
+	Stack<Board> Q;
+	
+	//
+	JButton undoButton = new JButton("UNDO");;
+	JButton muteButton = new JButton( "MUTE");;
+	
 	public GameEngine(Board board, int level) {
 		numberOfMoves = 0;
 		this.board = board;
 		System.out.println("The initial board");
+		
+		Q = new Stack<Board>();		
+		System.out.println("size  " + Q.size());
+		Q.push(board);
+		System.out.println("new Size: "+ Q.size());
+		setBackground(Color.yellow);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		setLayout(null);
+		
+		
+		undoButton.setText("UNDO");
+		muteButton.setText("MUTE");
+		
+		undoButton.addActionListener(this);
+		muteButton.addActionListener(this);
+		
+		undoButton.setBounds(550,50,100,50);
+		muteButton.setBounds(550,200,100,50);
+		add(undoButton);
+		add(muteButton);
+		mute = false;
+		play(file,mute);
+		
 	}
 
 	void paint() {
@@ -40,12 +84,9 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		this.setBackground(Color.yellow);
-		this.addMouseListener(this);
-		this.addMouseMotionListener(this);
 		Image boardImage = new ImageIcon("board.png").getImage();
 		g.drawImage(boardImage, 0, 0, 450, 450, this);
-
+	
 		for (int i = 0; i < 6; i++)
 			for (int j = 0; j < 6; j++)
 
@@ -85,7 +126,7 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 			for (int j = 0; j < 6; j++)
 
 				if (board.coordinates[j][i] == 1) {
-					Car tempt = board.searchCoordinates(j, i);
+					Car tempt =board.searchCoordinates(j, i);
 					if (tempt != null && tempt.direction)
 						if (tempt.size == 2) {// if car is vertical & size 2
 							Image car = new ImageIcon("10.png").getImage();
@@ -96,9 +137,47 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 							g.drawImage(car, i * 75, j * 75, 75, 225, this);
 							j += 2;
 						}
-				}
+				}	
+				repaint();
+		if(win) {
+			this.setVisible(false);
+			undoButton.setVisible(false);
+			muteButton.setVisible(false);
+			myClip.stop();
+	    	JOptionPane.showMessageDialog(null, "WIN! \nYou finished in " + numberOfMoves +" number of moves");
+		}
 	}
+	
+	
+	
 
+	@Override
+	public void actionPerformed(ActionEvent evt) {
+								
+		    if( evt.getSource() == undoButton) {
+		       System.out.println("num of element:  " + Q.size()); 
+		       Q.pop();
+	    	   board = Q.peek();
+	    	   System.out.println("new :  " + Q.size());
+	    	   repaint();
+			}
+		    if(evt.getSource() == muteButton) {
+		    	
+		    	if(mute == false) {	
+		    		mute = true;
+		    		myClip.stop();
+		    		return;
+		    	}
+		    	
+		    	if(mute == true) {
+		    		mute =false;
+		    		play(file,mute);
+		    		return;
+		    	}  				    	
+		    	repaint();
+		    }
+	}
+	
 	@Override
 	public void mouseMoved(MouseEvent e) {
 	}
@@ -118,13 +197,15 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-
+		
 		xDragged = e.getX() / 75;
 		yDragged = e.getY() / 75;
 		if (x) {
-			if (board.moveCar(yClicked, xClicked, yDragged, xDragged))
+			
+			if (board.moveCar(yClicked, xClicked, yDragged, xDragged)) {
 				numberOfMoves++;
-			System.out.println(numberOfMoves);
+				//board.Q.push(board);
+			}
 			x = false;
 		}
 		repaint();
@@ -141,5 +222,37 @@ public class GameEngine extends JPanel implements MouseListener, MouseMotionList
 	@Override
 	public void mouseExited(MouseEvent e) {
 	}
+
+
+	public void play(File file,Boolean mute) 
+	{
+	    try
+	    {
+	        //final Clip
+	    	myClip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
+	       // myClip = clip;
+	        
+	        myClip.addLineListener(new LineListener()
+	        {
+	            @Override
+	            public void update(LineEvent event)
+	            {
+	                if (event.getType() == LineEvent.Type.STOP)
+	                    myClip.close();
+	            }
+	        });
+
+	        myClip.open(AudioSystem.getAudioInputStream(file));
+	        myClip.start();
+	        if(mute == true)
+	        myClip.stop();
+	    }
+	    catch (Exception exc)
+	    {
+	        exc.printStackTrace(System.out);
+	    }
+	    
+	}
+
 
 }
