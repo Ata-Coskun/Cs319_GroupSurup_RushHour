@@ -86,7 +86,7 @@ public class Settings extends JPanel implements MouseListener, MouseMotionListen
 		{
 			try {
 				
-				DisplayLevel level =  new DisplayLevel();
+				DisplayLevelScreen level =  new DisplayLevelScreen();
 				f.setVisible(false); //you can't see me!
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -6,14 +6,21 @@ import java.util.Stack;
 public class Board {
 
 	int[][] coordinates; // 0 if it's in board and valid, 1 if it's in board and invalid, 2 if it's the
-							// board, 3 if it's out of the board
+	// board, 3 if it's out of the board
+	
+	
 	ArrayList<Car> cars;
 	ArrayList<Obstacle> obstacles;
-	
+	int boardType;
 
 	
-	Board() {
-		coordinates = new int[6][6];
+	Board(int boardType) {
+		if(boardType == 0)
+		coordinates = new int[6][6]; // single game board
+		
+		if(boardType == 1)
+		coordinates = new int[6][14]; // multigame board
+		
 		cars = new ArrayList<Car>();
 		obstacles = new ArrayList<Obstacle>();
 	}
