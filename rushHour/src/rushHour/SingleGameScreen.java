@@ -25,8 +25,8 @@ import javax.swing.JPanel;
 public class SingleGameScreen extends JPanel implements MouseListener, MouseMotionListener,ActionListener{
 	
 	
-	static int xDragged = 0, yDragged = 0;
-	static int xClicked = 0, yClicked = 0;
+	static int iDragged = 0, jDragged = 0;
+	static int iClicked = 0, jClicked = 0;
 	SingleGameEngine engine;
 	Board board;
 	
@@ -75,16 +75,6 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		mute = false;
 		play(file,mute);
 		
-	}
-
-	void paint() {
-		for (int i = 0; i < 6; i++) {
-			for (int j = 0; j < 6; j++) {
-				System.out.print(board.coordinates[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println("\n");
 	}
 	
 	public void checkWin() throws IOException {
@@ -235,8 +225,8 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	@Override
 	public void mousePressed(MouseEvent e) {
 		x = true;
-		xClicked = e.getX() / 75;
-		yClicked = e.getY() / 75;
+		iClicked = e.getY() / 75;
+		jClicked = e.getX() / 75;
 		repaint();
 	}
 
@@ -247,12 +237,12 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
-		xDragged = e.getX() / 75;
-		yDragged = e.getY() / 75;
+
+		iDragged = e.getY() / 75;
+		jDragged = e.getX() / 75;
 		if (x) {
 			
-			if (engine.update(yClicked, xClicked, yDragged, xDragged)) {
+			if (engine.update(iClicked, jClicked, iDragged, jDragged)) {
 				numberOfMoves++;
 				//board.Q.push(board);
 			}

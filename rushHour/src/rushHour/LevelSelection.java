@@ -10,7 +10,7 @@ public class LevelSelection {
 	JFrame f;
      public LevelSelection(int x) {
     	System.out.println("Welcome to the rush hour");
- 		Board board = new Board(0);
+ 		Board board = new Board(false);
 
  		if (x == 1) {
  			board.setCar(0, 1, 0, 0, 0);

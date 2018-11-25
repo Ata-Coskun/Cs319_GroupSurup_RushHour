@@ -6,23 +6,27 @@ import java.util.Stack;
 public class Board {
 
 	int[][] coordinates; // 0 if it's in board and valid, 1 if it's in board and invalid, 2 if it's the
-	// board, 3 if it's out of the board
-	
-	
+	// board, 3 if it's board's grab place 4 outside the board
+
 	ArrayList<Car> cars;
 	ArrayList<Obstacle> obstacles;
-	int boardType;
+	int height;
+	int width;
+	boolean win;
 
-	
-	Board(int boardType) {
-		if(boardType == 0)
-		coordinates = new int[6][6]; // single game board
-		
-		if(boardType == 1)
-		coordinates = new int[6][14]; // multigame board
-		
+	Board(boolean gameMode) {
+		if (gameMode) {
+			height = 22;
+			width = 14;
+		}
+		else 
+			height = width = 6;
+			
+			coordinates = new int[height][width];
+			
 		cars = new ArrayList<Car>();
 		obstacles = new ArrayList<Obstacle>();
+		win = false;
 	}
 
 	public void setCar(int i1, int i2, int j1, int j2, int carType) {
@@ -37,12 +41,16 @@ public class Board {
 		obstacles.add(new Obstacle(i, j));
 	}
 
-	public boolean moveCar(int i, int j, int iDragged, int jDragged) {
+	public boolean moveCar(int i, int j, int iDragged, int jDragged, boolean turn) {
 		Car tempt = searchCoordinates(i, j);
 		if (tempt == null)
 			return false;
 
-		System.out.println(i + "\t" + j + "\t" + iDragged + "\t" + jDragged);
+		if ((turn && tempt.carType == 2) || (!turn && tempt.carType == 1)) {
+			System.out.println("You cannot move this car");
+			return false;
+		}
+			
 
 		if (tempt.size == 3) {
 			if (tempt.direction) {
@@ -65,11 +73,10 @@ public class Board {
 					jDragged--;
 			}
 		}
-		System.out.println(i + "\t" + j + "\t" + iDragged + "\t" + jDragged);
 
 		// Out of boundaries exception
-		if ((tempt.direction && (iDragged + tempt.size > 6 || iDragged < 0))
-				|| (!tempt.direction && (jDragged + tempt.size > 6 || jDragged < 0))) {
+		if ((tempt.direction && (iDragged + tempt.size > height || iDragged < 0))
+				|| (!tempt.direction && (jDragged + tempt.size > width || jDragged < 0))) {
 			System.out.println("Out of bounds error");
 			return false;
 		}
@@ -112,8 +119,10 @@ public class Board {
 			for (int b = tempt.j1; b <= tempt.j2; b++)
 				coordinates[a][b] = 1;
 
-		// System.out.println("Movement is successful");
-		System.out.println(tempt.i2 + "\t" + tempt.j2 + "\t" + tempt.size);
+		if((tempt.carType == 1 && tempt.j2 == width - 1) || (tempt.carType == 2 && tempt.j1 == 0)) {
+			System.out.println("Congralations general, the winner is player number: " + tempt.carType);
+			win = true;
+		}
 		return true;
 	}
 
@@ -122,8 +131,86 @@ public class Board {
 			for (Car car : cars)
 				if (car.searchCar(i, j))
 					return car;
-		// System.out.println("No car found on that location :'(");
 		return null;
+	}
+
+	public boolean moveBoard(int i, int j, int iDragged) {
+		int jFor = 0;
+		if ((i >= 0 && i < 22 && iDragged >= 0 && iDragged < 22) && ((j >= 0 && j < 5) || (j >= 9 && j < 14))
+				&& coordinates[i][j] == 3 && i != iDragged) {
+
+			if (j < 5)
+				jFor = 0;
+			if (j > 8)
+				jFor = 9;
+
+			boolean successful = false;
+			for (Car car : cars) {
+				if (!car.direction && ((jFor == 0 && (car.j1 == 4 || car.j2 == 5))
+						|| (jFor == 9 && (car.j1 == 8 || car.j2 == 9)))) {
+					System.out.println("Car in the middle");
+					return false;
+				}
+			}
+			if (i < iDragged) { // aþaðý kaydýrma için
+				for (int b = jFor; b < jFor + 5; b++)
+					if (iDragged <= 14 && coordinates[i + 1][b] < 3) {// if upper part is grabbed
+						for (int a = 7 + iDragged; a >= iDragged; a--)
+							coordinates[a][b] = coordinates[a - iDragged + i][b];
+						for (int a = iDragged - 1; a >= i; a--)
+							coordinates[a][b] = 4;
+						successful = true;
+					} else if (i >= 7 && coordinates[i - 1][b] < 3) {// aþaðýdan tutulduysa
+						for (int a = iDragged; a >= iDragged - 7; a--)
+							coordinates[a][b] = coordinates[a - iDragged + i][b];
+						for (int a = iDragged - 8; a >= i - 7; a--)
+							coordinates[a][b] = 4;
+						successful = true;
+					}
+			} else // yukarý kaydýrma için
+				for (int b = jFor; b < jFor + 5; b++)
+					if (i <= 14 && coordinates[i + 1][b] < 3) {// if upper part is grabbed
+						for (int a = iDragged; a <= iDragged + 7; a++)
+							coordinates[a][b] = coordinates[i + a - iDragged][b];
+						for (int a = iDragged + 8; a < i + 8; a++)
+							coordinates[a][b] = 4;
+						successful = true;
+					} else if (iDragged >= 7) {// aþaðýdan tutulduysa
+						for (int a = iDragged - 7; a <= iDragged; a++)
+							coordinates[a][b] = coordinates[i + a - iDragged][b];
+						for (int a = iDragged + 1; a < i + 1; a++)
+							coordinates[a][b] = 4;
+						successful = true;
+					}
+			if(successful)
+				for (Car car : cars) 
+					if ((jFor == 0 && car.j1 < 5) || (jFor == 9 && car.j1 > 8)) 
+						car.elevate(car.i1 + (iDragged - i));
+		
+			
+			System.out.println("true");
+			return true;
+		} else {
+			System.out.println("Out of Bounds Exception");
+			return false;
+		}
+	}
+
+	public void setInitialBoard() {
+		for (int i = 0; i < 22; i++) {
+			for (int j = 0; j < 14; j++) {
+				if (i < 7 || i > 14)
+					coordinates[i][j] = 4;
+				if (i == 7 || i == 14)
+					coordinates[i][j] = 3;
+				if (i > 7 && i < 14)
+					coordinates[i][j] = 0;
+			}
+		}
+	}
+	
+	public boolean getWin() {
+		return win;
 	}
 
 }

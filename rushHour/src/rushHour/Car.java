@@ -45,6 +45,13 @@ public class Car {
 			j1 = jDragged;
 			j2 = j1 + size - 1;
 		}
-
+	}
+	
+	public void elevate(int i) {
+		i1 = i;
+		if(direction)
+			i2 = i1 + size - 1;
+		else
+			i2 = i1;
 	}
 }
