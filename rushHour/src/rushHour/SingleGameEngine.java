@@ -17,7 +17,7 @@ public class SingleGameEngine extends GameEngine {
 	
 	//@Override 
 	public boolean update(int x1,int x2, int y1, int y2) {
-		boolean result = this.board.moveCar(x1,x2,y1,y2, false);
+		boolean result = this.board.moveCar(x1,x2,y1,y2, true);
 		stack.push(board);
 		return result;
 	}

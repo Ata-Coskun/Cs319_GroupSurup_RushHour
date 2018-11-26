@@ -3,7 +3,7 @@ package rushHour;
 public class BoardSelection {
 	MultiGameEngine multiEngine;
 	public BoardSelection() {
-			Board board = new Board(true);
+		Board board = new Board(false);
 		
 			board.setInitialBoard();
  			board.setCar(9, 9, 0, 1, 1);

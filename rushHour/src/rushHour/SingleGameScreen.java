@@ -42,6 +42,7 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	Stack<Board> Q;
 	int level;
 	int endGame;
+	int theme;
 	//
 	JButton undoButton = new JButton("UNDO");;
 	JButton muteButton = new JButton( "MUTE");;
@@ -97,7 +98,7 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	    	{
 				this.setVisible(false);
 	    		try {
-					MainScreen newGame = new MainScreen();
+					MainScreen newGame = new MainScreen(theme, mute);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

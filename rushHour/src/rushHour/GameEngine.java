@@ -26,6 +26,6 @@ public abstract class GameEngine {
 	
 	//public GameEngine(Board board) {};
 	
-	abstract boolean update(int x1,int x2,int y1,int y2);
+	abstract boolean update(int iClicked,int jClicked,int iDragged,int jDragged);
 			
 }
