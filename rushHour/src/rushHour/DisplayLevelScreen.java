@@ -16,12 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class DisplayLevelScreen extends JPanel implements MouseListener, MouseMotionListener,ActionListener {
-	MouseListener ml;
-	MouseMotionListener mml;
+public class DisplayLevelScreen extends JPanel implements ActionListener {
 
-	static int xDragged =0,yDragged=0;
-	static int xClicked=0, yClicked=0;
 	JButton btn;
 	JButton btn2;
 	JFrame f;
@@ -83,11 +79,21 @@ public class DisplayLevelScreen extends JPanel implements MouseListener, MouseMo
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btn ) {
-			LevelSelection selection = new LevelSelection(1);
+			try {
+				SingleLevelSelection selection = new SingleLevelSelection(1);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			f.setVisible(false);
 		}
 		if(e.getSource() == btn2) {
-			LevelSelection selection = new LevelSelection(2);
+			try {
+				SingleLevelSelection selection = new SingleLevelSelection(2);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 
@@ -95,38 +101,9 @@ public class DisplayLevelScreen extends JPanel implements MouseListener, MouseMo
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		this.setBackground(Color.pink);
-		this.addMouseListener(this);
-		this.addMouseMotionListener(this);
 		
 	}
 
-		@Override
-		public void mouseMoved(MouseEvent e) {}
-		@Override
-		public void mousePressed(MouseEvent e) {
-			xClicked = e.getX()/75;
-		    yClicked = e.getY()/75;
-		    repaint();
-		}
-		@Override
-		public void mouseClicked(MouseEvent e){
-			
-		}
-		@Override
-		public void mouseReleased(MouseEvent e){
-			
-		}
 		
-		@Override
-		public void mouseDragged(MouseEvent e){
-			xDragged = e.getX()/75;
-			yDragged = e.getY()/75;
-			repaint();
-		}
-		@Override
-		public void mouseEntered(MouseEvent e){}
-		@Override
-		public void mouseExited(MouseEvent e){}
-
 	}
 

@@ -14,12 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class GetHelpScreen extends JPanel implements MouseListener, MouseMotionListener {
-	
-	MouseListener ml;
-	MouseMotionListener mml;
-	static int xDragged =0,yDragged=0;
-	static int xClicked=0, yClicked=0;
+public class GetHelpScreen extends JPanel {
 
 	 public GetHelpScreen() throws IOException
 	 {
@@ -43,39 +38,7 @@ public class GetHelpScreen extends JPanel implements MouseListener, MouseMotionL
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		this.setBackground(Color.orange);
-		this.addMouseListener(this);
-		this.addMouseMotionListener(this);
-
 		repaint();
 	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {}
-	@Override
-	public void mousePressed(MouseEvent e) {
-		xClicked = e.getX()/75;
-	    yClicked = e.getY()/75;
-	    repaint();
-	}
-	@Override
-	public void mouseClicked(MouseEvent e){
-		
-	}
-	@Override
-	public void mouseReleased(MouseEvent e){
-		
-	}
-	
-	@Override
-	public void mouseDragged(MouseEvent e){
-		xDragged = e.getX()/75;
-		yDragged = e.getY()/75;
-		repaint();
-	}
-	@Override
-	public void mouseEntered(MouseEvent e){}
-	@Override
-	public void mouseExited(MouseEvent e){}
-	
 
 }

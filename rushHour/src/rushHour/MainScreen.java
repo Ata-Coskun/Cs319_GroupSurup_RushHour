@@ -17,8 +17,10 @@ import java.awt.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-
+import java.io.*;
+import java.util.*;
 
 public class MainScreen implements ActionListener  {
 	
@@ -29,10 +31,12 @@ public class MainScreen implements ActionListener  {
 	JButton playBtn;
 	JButton settingsBtn;
 	JButton credits;
+	JButton resumeBtn;
 	BufferedImage logoGame;
 	JLabel logoLabel;
 	JFrame f3 ;
-
+	FileReader reader;
+	
 	public MainScreen(int theme, boolean sound) throws IOException
 	{
 		if(theme == 1) {
@@ -45,32 +49,40 @@ public class MainScreen implements ActionListener  {
 				 playBtn = new JButton();
 				 settingsBtn = new JButton();
 				 credits = new JButton();
+				 resumeBtn = new JButton();
 				 logoGame = ImageIO.read(new File("Logo11.png"));
 				 logoLabel= new JLabel(new ImageIcon(logoGame));
 				 f3 = new JFrame("Rush Hour");
 				 
 					//main panel
 					panel2.setLayout(null);
+									
+					resumeBtn.setVisible(true);
+					resumeBtn.setBounds(350, 200, 300, 100);
+					resumeBtn.setForeground(Color.red);
+					resumeBtn.setBackground(Color.ORANGE);
+					resumeBtn.addActionListener(this);
+					
 					playBtn.setVisible(true);
-					playBtn.setBounds(350, 200, 300, 100);
+					playBtn.setBounds(350, 350, 300, 100);
 					playBtn.setForeground(Color.red);
 					playBtn.setBackground(Color.ORANGE);
 					playBtn.addActionListener(this);
 					
 					settingsBtn.setVisible(true);
-					settingsBtn.setBounds(350, 350, 300, 100);
+					settingsBtn.setBounds(350, 500, 300, 100);
 					settingsBtn.setForeground(Color.red);
 					settingsBtn.setBackground(Color.ORANGE);
 					settingsBtn.addActionListener(this);
 
 					getHelpBtn.setVisible(true);
-					getHelpBtn.setBounds(350,500,300,100);
+					getHelpBtn.setBounds(350,650,300,100);
 					getHelpBtn.setForeground(Color.red);
 					getHelpBtn.setBackground(Color.ORANGE);
 					getHelpBtn.addActionListener(this);
 
 					credits.setVisible(true);
-					credits.setBounds(350,650, 300, 100);
+					credits.setBounds(350,800, 300, 100);
 					credits.setForeground(Color.red);
 					credits.setBackground(Color.ORANGE);
 					//logo
@@ -85,11 +97,15 @@ public class MainScreen implements ActionListener  {
 
 					f3.add(panel2);
 					f3.setLocationRelativeTo(null);
-					f3.setSize(1000,1000);
+					f3.setSize(1250,1250);
 					f3.setVisible(true);
+					
+					resumeBtn.setText("Resume");
+					resumeBtn.setFont(new Font("Serif", Font.ITALIC,25));
 					
 					playBtn.setText("Play");
 					playBtn.setFont(new Font("Serif", Font.ITALIC,25));
+					
 					settingsBtn.setText("Settings");
 					settingsBtn.setFont(new Font("Serif", Font.ITALIC,25));
 
@@ -100,11 +116,13 @@ public class MainScreen implements ActionListener  {
 					credits.setFont(new Font("Serif", Font.ITALIC,25));
 
 					panel2.setBackground(Color.white);
+					panel2.add(resumeBtn);
 					panel2.add(playBtn);
 					panel2.add(settingsBtn);
 					panel2.add(getHelpBtn);
 					panel2.add(credits);
 					panel2.add(logoLabel);
+					
 			}
 			if(sound == false)
 			{
@@ -113,6 +131,7 @@ public class MainScreen implements ActionListener  {
 				// game = new RushHour();
 				 panel2 = new JPanel();
 				 playBtn = new JButton();
+				 resumeBtn = new JButton();
 				 settingsBtn = new JButton();
 				 credits = new JButton();
 				 logoGame = ImageIO.read(new File("Logo11.png"));
@@ -121,26 +140,33 @@ public class MainScreen implements ActionListener  {
 				 
 					//main panel
 					panel2.setLayout(null);
+					
+					resumeBtn.setVisible(true);
+					resumeBtn.setBounds(350, 200, 300, 100);
+					resumeBtn.setForeground(Color.red);
+					resumeBtn.setBackground(Color.ORANGE);
+					resumeBtn.addActionListener(this);
+					
 					playBtn.setVisible(true);
-					playBtn.setBounds(350, 200, 300, 100);
+					playBtn.setBounds(350, 350, 300, 100);
 					playBtn.setForeground(Color.red);
 					playBtn.setBackground(Color.ORANGE);
 					playBtn.addActionListener(this);
 					
 					settingsBtn.setVisible(true);
-					settingsBtn.setBounds(350, 350, 300, 100);
+					settingsBtn.setBounds(350, 500, 300, 100);
 					settingsBtn.setForeground(Color.red);
 					settingsBtn.setBackground(Color.ORANGE);
 					settingsBtn.addActionListener(this);
 
 					getHelpBtn.setVisible(true);
-					getHelpBtn.setBounds(350,500,300,100);
+					getHelpBtn.setBounds(350,650,300,100);
 					getHelpBtn.setForeground(Color.red);
 					getHelpBtn.setBackground(Color.ORANGE);
 					getHelpBtn.addActionListener(this);
 
 					credits.setVisible(true);
-					credits.setBounds(350,650, 300, 100);
+					credits.setBounds(350,800, 300, 100);
 					credits.setForeground(Color.red);
 					credits.setBackground(Color.ORANGE);
 					//logo
@@ -155,11 +181,16 @@ public class MainScreen implements ActionListener  {
 
 					f3.add(panel2);
 					f3.setLocationRelativeTo(null);
-					f3.setSize(1000,1000);
+					f3.setSize(1250,1250);
 					f3.setVisible(true);
+					
+					resumeBtn.setText("Resume");
+					resumeBtn.setFont(new Font("Serif", Font.ITALIC,25));
+					
 					
 					playBtn.setText("Play");
 					playBtn.setFont(new Font("Serif", Font.ITALIC,25));
+					
 					settingsBtn.setText("Settings");
 					settingsBtn.setFont(new Font("Serif", Font.ITALIC,25));
 
@@ -170,6 +201,7 @@ public class MainScreen implements ActionListener  {
 					credits.setFont(new Font("Serif", Font.ITALIC,25));
 
 					panel2.setBackground(Color.white);
+					panel2.add(resumeBtn);
 					panel2.add(playBtn);
 					panel2.add(settingsBtn);
 					panel2.add(getHelpBtn);
@@ -187,6 +219,7 @@ public class MainScreen implements ActionListener  {
 				// game = new RushHour();
 				 panel2 = new JPanel();
 				 playBtn = new JButton();
+				 resumeBtn = new JButton();
 				 settingsBtn = new JButton();
 				 credits = new JButton();
 				 logoGame = ImageIO.read(new File("Logo11.png"));
@@ -195,26 +228,34 @@ public class MainScreen implements ActionListener  {
 				 
 					//main panel
 					panel2.setLayout(null);
+					
+
+					resumeBtn.setVisible(true);
+					resumeBtn.setBounds(350, 200, 300, 100);
+					resumeBtn.setForeground(Color.red);
+					resumeBtn.setBackground(Color.ORANGE);
+					resumeBtn.addActionListener(this);
+					
 					playBtn.setVisible(true);
-					playBtn.setBounds(350, 200, 300, 100);
+					playBtn.setBounds(350, 350, 300, 100);
 					playBtn.setForeground(Color.red);
 					playBtn.setBackground(Color.ORANGE);
 					playBtn.addActionListener(this);
 					
 					settingsBtn.setVisible(true);
-					settingsBtn.setBounds(350, 350, 300, 100);
+					settingsBtn.setBounds(350, 500, 300, 100);
 					settingsBtn.setForeground(Color.red);
 					settingsBtn.setBackground(Color.ORANGE);
 					settingsBtn.addActionListener(this);
 
 					getHelpBtn.setVisible(true);
-					getHelpBtn.setBounds(350,500,300,100);
+					getHelpBtn.setBounds(350,650,300,100);
 					getHelpBtn.setForeground(Color.red);
 					getHelpBtn.setBackground(Color.ORANGE);
 					getHelpBtn.addActionListener(this);
 
 					credits.setVisible(true);
-					credits.setBounds(350,650, 300, 100);
+					credits.setBounds(350,800, 300, 100);
 					credits.setForeground(Color.red);
 					credits.setBackground(Color.ORANGE);
 					//logo
@@ -229,11 +270,15 @@ public class MainScreen implements ActionListener  {
 
 					f3.add(panel2);
 					f3.setLocationRelativeTo(null);
-					f3.setSize(1000,1000);
+					f3.setSize(1250,1250);
 					f3.setVisible(true);
 					
 					playBtn.setText("Play");
 					playBtn.setFont(new Font("Serif", Font.ITALIC,25));
+					
+					resumeBtn.setText("Resume");
+					resumeBtn.setFont(new Font("Serif", Font.ITALIC,25));
+					
 					settingsBtn.setText("Settings");
 					settingsBtn.setFont(new Font("Serif", Font.ITALIC,25));
 
@@ -245,6 +290,7 @@ public class MainScreen implements ActionListener  {
 
 					panel2.setBackground(Color.white);
 					panel2.add(playBtn);
+					panel2.add(resumeBtn);
 					panel2.add(settingsBtn);
 					panel2.add(getHelpBtn);
 					panel2.add(credits);
@@ -256,6 +302,7 @@ public class MainScreen implements ActionListener  {
 				 getHelpBtn = new JButton();
 				// game = new RushHour();
 				 panel2 = new JPanel();
+				 resumeBtn = new JButton();
 				 playBtn = new JButton();
 				 settingsBtn = new JButton();
 				 credits = new JButton();
@@ -265,26 +312,33 @@ public class MainScreen implements ActionListener  {
 				 
 					//main panel
 					panel2.setLayout(null);
+					
+					resumeBtn.setVisible(true);
+					resumeBtn.setBounds(350, 200, 300, 100);
+					resumeBtn.setForeground(Color.red);
+					resumeBtn.setBackground(Color.ORANGE);
+					resumeBtn.addActionListener(this);
+					
 					playBtn.setVisible(true);
-					playBtn.setBounds(350, 200, 300, 100);
+					playBtn.setBounds(350, 350, 300, 100);
 					playBtn.setForeground(Color.red);
 					playBtn.setBackground(Color.ORANGE);
 					playBtn.addActionListener(this);
 					
 					settingsBtn.setVisible(true);
-					settingsBtn.setBounds(350, 350, 300, 100);
+					settingsBtn.setBounds(350, 500, 300, 100);
 					settingsBtn.setForeground(Color.red);
 					settingsBtn.setBackground(Color.ORANGE);
 					settingsBtn.addActionListener(this);
 
 					getHelpBtn.setVisible(true);
-					getHelpBtn.setBounds(350,500,300,100);
+					getHelpBtn.setBounds(350,650,300,100);
 					getHelpBtn.setForeground(Color.red);
 					getHelpBtn.setBackground(Color.ORANGE);
 					getHelpBtn.addActionListener(this);
 
 					credits.setVisible(true);
-					credits.setBounds(350,650, 300, 100);
+					credits.setBounds(350,800, 300, 100);
 					credits.setForeground(Color.red);
 					credits.setBackground(Color.ORANGE);
 					//logo
@@ -299,11 +353,15 @@ public class MainScreen implements ActionListener  {
 
 					f3.add(panel2);
 					f3.setLocationRelativeTo(null);
-					f3.setSize(1000,1000);
+					f3.setSize(1250,1250);
 					f3.setVisible(true);
 					
 					playBtn.setText("Play");
 					playBtn.setFont(new Font("Serif", Font.ITALIC,25));
+					
+					resumeBtn.setText("Resume");
+					resumeBtn.setFont(new Font("Serif", Font.ITALIC,25));
+					
 					settingsBtn.setText("Settings");
 					settingsBtn.setFont(new Font("Serif", Font.ITALIC,25));
 
@@ -315,6 +373,7 @@ public class MainScreen implements ActionListener  {
 
 					panel2.setBackground(Color.white);
 					panel2.add(playBtn);
+					panel2.add(resumeBtn);
 					panel2.add(settingsBtn);
 					panel2.add(getHelpBtn);
 					panel2.add(credits);
@@ -363,6 +422,23 @@ public class MainScreen implements ActionListener  {
 			try {
 				Credits credits = new Credits();
 				f3.setVisible(false); 
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(evt.getSource() == resumeBtn)
+		{
+			try {
+				Scanner scanner = new Scanner(new File("resume.txt"));
+				int levelNumber;
+				levelNumber = Integer.valueOf(scanner.nextLine());
+				System.out.println("levelNUMber:"+ levelNumber);
+				SingleLevelSelection selection = new SingleLevelSelection(levelNumber);
+				scanner.close();
+				f3.setVisible(false); 
+			
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

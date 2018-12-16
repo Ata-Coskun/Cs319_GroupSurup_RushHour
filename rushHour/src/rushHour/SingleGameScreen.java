@@ -1,6 +1,8 @@
 package rushHour;
 
 import java.awt.Color;
+
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -8,8 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.Stack;
 
 import javax.sound.sampled.AudioSystem;
@@ -21,7 +21,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+import java.io.*;
+import java.util.*;
 public class SingleGameScreen extends JPanel implements MouseListener, MouseMotionListener,ActionListener{
 	
 	
@@ -29,32 +30,34 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	static int iClicked = 0, jClicked = 0;
 	SingleGameEngine engine;
 	Board board;
-	
+	int time;
 	int numberOfMoves;
 	int levelNo;
-	
+	int highScore; // high score
 	boolean x;
 	boolean win;
 	//Timer myTimer = new Timer();
 	public Clip myClip;
 	boolean mute;
 	File file = new File("OffLimits.wav");
-	Stack<Board> Q;
+	Stack<Integer> Q;
 	int level;
 	int endGame;
 	int theme;
 	//
 	JButton undoButton = new JButton("UNDO");;
 	JButton muteButton = new JButton( "MUTE");;
+	File scoreFile;
+	PrintWriter writer;
 	
-	public SingleGameScreen(SingleGameEngine engine) {
+	public SingleGameScreen(SingleGameEngine engine) throws IOException {
 		endGame = -15;
 		numberOfMoves = 0;
 		this.engine = engine;
 		this.board = engine.board;
 		Q = engine.stack;
-		this.level = engine.level;
-		
+		this.levelNo = engine.level;
+		time = 10;
 		setBackground(Color.white);
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -76,10 +79,74 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		mute = false;
 		play(file,mute);
 		
+		scoreFile = new File("high_score.txt");
+		
+		writer = new PrintWriter(scoreFile);
+		
+		//int charCounter = 1; // first level
+		//int character=0;
+		//while(charCounter != levelNo) {
+		//	character = reader.read(); // level 1 to 20
+		//	if( (char)character != ',')
+		//		charCounter++;
+		//}
+		 readFile(); // get the high score from file	 		
 	}
-	
+	public void readFile() throws IOException {
+		//int charCounter = 1; // first level
+		//int character=0;
+		//while(charCounter != levelNo) {
+			//character = reader.read(); // level 1 to 20
+			//if( (char)character != ',')
+			//	charCounter++;
+		//}
+		 //highScore = character; // get the high score from file
+		// System.out.println("highScore during reading: " + highScore);
+		 //reader.close();
+		//return highScore;
+		Scanner scanner = new Scanner(scoreFile);
+		String scoreDatas = scanner.nextLine();
+		System.out.println("datas: " + scoreDatas);
+		String score = scoreDatas.charAt(0)+ "";
+		int i = 0;
+		int counter = 1;
+		while(counter != levelNo) {
+			score = scoreDatas.charAt(i)+"";
+			if(score != ",")
+				counter++;
+		}
+			highScore = Integer.valueOf(score);
+	}
+	public void writeFile(boolean high,int highscore) throws IOException {
+		String newString ="";
+		int charCounter =1;
+		int character = 0;
+		while( (char) character != '!') {
+			
+			//character = reader.read(); // level 1 to 20
+			
+			if(charCounter != levelNo)
+			newString += (char) character;
+			
+			else {
+				newString += (char)highscore;
+			}
+			
+			if( (char)character != ',')
+				charCounter++;	
+		}
+		System.out.println("new String: " + newString);
+		writer.write(""); // delete ex
+		writer.write(newString); // updated
+		writer.close();
+		//reader.close();
+		
+	}
 	public void checkWin() throws IOException {
 		if(win) {
+			//if(engine.calculateScore(time,numberOfMoves) > highScore) // new score is highest
+			//writeFile(true,engine.calculateScore(time, numberOfMoves)); // update file
+			writeFile(true,15);
 			
 			Object[] options = {"Turn back to main",
                     "Next Level",
@@ -106,7 +173,7 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	    	}
 	    	if(endGame==1) {
 	    		this.setVisible(false);
-	    		LevelSelection selection = new LevelSelection(2);
+	    		SingleLevelSelection selection = new SingleLevelSelection(2);
 	    	}
 	    	if(endGame==2) {
 	    		this.setVisible(false);
@@ -118,6 +185,7 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		
 		super.paintComponent(g);
 		Image boardImage = new ImageIcon("board.png").getImage();
 		g.drawImage(boardImage, 0, 0, 450, 450, this);
@@ -194,8 +262,9 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 								
 		    if( evt.getSource() == undoButton) {
 		       System.out.println("num of element:  " + Q.size()); 
-		       Q.pop();
-	    	   board = Q.peek();
+		      
+		       engine.update( Q.pop(),  Q.pop(),  Q.pop(),  Q.pop());
+//	    	   board = Q.peek();
 	    	   System.out.println("new :  " + Q.size());
 	    	   repaint();
 			}

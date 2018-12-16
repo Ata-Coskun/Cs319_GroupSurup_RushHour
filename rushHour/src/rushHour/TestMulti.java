@@ -33,7 +33,7 @@ public class TestMulti {
 		f.setResizable(false);
 		f.add(multi );//multigame engine
 		f.setLocationRelativeTo(null);
-		f.setSize(1000,1000);
+		f.setSize(2000,2000);
 		f.setVisible(true);
 		
 		

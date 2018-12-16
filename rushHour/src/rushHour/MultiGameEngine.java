@@ -42,34 +42,42 @@ public class MultiGameEngine extends GameEngine {
 
 	@Override
 	boolean update(int i, int j, int iDragged, int jDragged) {
-
-		if ((i >= 0 && i < 22 && iDragged >= 0 && iDragged < 22))
+		
+		if ((i >= 0 && i < 22 && iDragged >= 0 && iDragged < 22)) {
 			if (shift && ((j >= 0 && j < 5) || (j >= 9 && j < 14)) && board.coordinates[i][j] == 3 && i != iDragged) { // if shift is enabled
 				shift = !board.moveBoard(i, j, iDragged);
+				System.out.println("shifted");
+				//gameScreen.repaint();
 			} else if (board.coordinates[i][j] < 3) {
 				if (numberOfMoves == -1) { // if it's 1x
 					if (board.moveCar(i, j, iDragged, jDragged, turn))
 						numberOfMoves = 0;
-				} else if (numberOfMoves > 0) { // if it has a number
-					if (Math.abs(i - iDragged) > numberOfMoves) // if it moves vertically and more than numberOfMoves
+					//gameScreen.repaint();
+				}
+				else if (numberOfMoves > 0) { // if it has a number
+					if (Math.abs(i - iDragged) > numberOfMoves) { // if it moves vertically and more than numberOfMoves
 						if (i > iDragged) // if drag up
 							iDragged = i - numberOfMoves;
 						else // if drag down
 							iDragged = i + numberOfMoves;
-					else if (Math.abs(j - jDragged) > numberOfMoves)// if it moves horizontally and more than
+					}
+					else if (Math.abs(j - jDragged) > numberOfMoves) {// if it moves horizontally and more than
 																	// numberOfMoves
 						if (j > jDragged)// if drag right
 							jDragged = j - numberOfMoves;
 						else
 							jDragged = j + numberOfMoves;
-
+					}
 					if (board.moveCar(i, j, iDragged, jDragged, turn))
 						numberOfMoves -= Math.max(Math.abs(i - iDragged), Math.abs(j - jDragged));
 				}
 			}
+		}
 		
-		if (!shift && numberOfMoves == 0)
+		if (!shift && numberOfMoves == 0) {
 			turnSwap();
+			
+		}
 		return true;
 	}
 
@@ -80,16 +88,16 @@ public class MultiGameEngine extends GameEngine {
 			cards = cards1;
 		else
 			cards = cards2;
-
+		//gameScreen.repaint();
 		System.out.println("Your Cards:");
 		for (int i = 0; i < 4; i++)
 			System.out.println(i + ". " + cards[i].shift + "\t" + cards[i].numberOfMoves);
 
 		System.out.println("Please enter the number of the card you wanna play");
-		choice = scan.nextInt();
+		//choice = scan.nextInt();
 
-		numberOfMoves = cards[choice].numberOfMoves;
-		shift = cards[choice].shift;
+		//numberOfMoves = cards[choice].numberOfMoves;
+		//shift = cards[choice].shift;
 
 		for (int i = 0; i < 3; i++)
 			if (i >= choice) {
