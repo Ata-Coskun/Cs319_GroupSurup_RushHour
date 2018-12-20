@@ -15,12 +15,38 @@ import javax.swing.JPanel;
 
 public class ChangeThemeScreen extends JPanel implements ActionListener {
 
-	JButton btn;
-	JButton btn2;
-	JFrame f;
+	JButton theme1;
+	JButton theme2;
+	JFrame f2;
 	public ChangeThemeScreen() throws IOException
 	{
-		JPanel panel = new JPanel() ;
+		f2 = new JFrame("ChangeTheme");
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		theme1 = new JButton();
+		theme1.addActionListener(this);
+		theme1.setBounds(250, 100, 200, 200);
+		theme2 = new JButton();
+		theme2.addActionListener(this);
+		theme2.setBounds(250, 400, 200, 200);
+		theme1.setIcon(new ImageIcon("sing.png"));
+		// level2
+		theme2.setIcon(new ImageIcon("single.png"));
+		f2 = new JFrame("Select Levels");
+		f2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f2.setLocationRelativeTo(null);
+		BufferedImage img = ImageIO.read(new File("background.png"));
+		f2.setContentPane(new JLabel(new ImageIcon(img)));
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		f2.add(theme1, gbc);
+		f2.add(theme2, gbc);
+
+		// adding to the frame
+		f2.setSize(700, 700);
+		f2.setVisible(true);
+		f2.setLocationRelativeTo(null);
+		/*JPanel panel = new JPanel() ;
 		panel.setLayout(null);
 		btn = new JButton();
 		btn.addActionListener(this);
@@ -59,14 +85,14 @@ public class ChangeThemeScreen extends JPanel implements ActionListener {
 		//adding to the frame
 		f.setSize(1000,1000);
 		f.setVisible(true);
-        f.setLocationRelativeTo(null);
+        f.setLocationRelativeTo(null);*/
 
 		//LevelSelection selection = new LevelSelection(1);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btn ) {
-			f.setVisible(false);
+		if(e.getSource() == theme1 ) {
+			f2.setVisible(false);
 			try {
 				MainScreen mainScreen = new MainScreen(1,false);
 			} catch (IOException e1) {
@@ -74,8 +100,8 @@ public class ChangeThemeScreen extends JPanel implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
-		if(e.getSource() == btn2) {
-			f.setVisible(false);
+		if(e.getSource() == theme2) {
+			f2.setVisible(false);
 			try {
 				MainScreen mainScreen = new MainScreen(2,false);
 			} catch (IOException e1) {

@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class MultiGameScreen extends JPanel implements MouseListener, MouseMotionListener,ActionListener {
+public class MultiGameScreen extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
 	static int iDragged = 0, jDragged = 0;
 	static int iClicked = 0, jClicked = 0;
 	Board board;
@@ -24,24 +24,24 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	boolean win;
 	MultiGameEngine engine;
 	JButton[] cards;
+
 	public MultiGameScreen(MultiGameEngine engine) {
 		this.engine = engine;
 		this.board = engine.board;
 		setLayout(null);
 		cards = new JButton[8];
 		setLayout(null);
-		
+
 		cards[0] = new JButton("CARDS1[0]");
 		cards[1] = new JButton("CARDS1[1]");
 		cards[2] = new JButton("CARDS1[2]");
 		cards[3] = new JButton("CARDS1[3]");
-		
+
 		cards[4] = new JButton("CARDS2[0]");
 		cards[5] = new JButton("CARDS2[1]");
 		cards[6] = new JButton("CARDS2[2]");
 		cards[7] = new JButton("CARDS2[3]");
-		
-		
+
 		cards[0].addActionListener(this);
 		cards[1].addActionListener(this);
 		cards[2].addActionListener(this);
@@ -50,18 +50,17 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		cards[5].addActionListener(this);
 		cards[6].addActionListener(this);
 		cards[7].addActionListener(this);
-		
-		
-		cards[0].setBounds(550,50,100,50);
-		cards[1].setBounds(650,50,100,50);
-		cards[2].setBounds(750,50,100,50);
-		cards[3].setBounds(850,50,100,50);
-		
-		cards[4].setBounds(550,150,100,50);
-		cards[5].setBounds(650,150,100,50);
-		cards[6].setBounds(750,150,100,50);
-		cards[7].setBounds(850,150,100,50);
-		
+
+		cards[0].setBounds(550, 50, 100, 50);
+		cards[1].setBounds(650, 50, 100, 50);
+		cards[2].setBounds(750, 50, 100, 50);
+		cards[3].setBounds(850, 50, 100, 50);
+
+		cards[4].setBounds(550, 150, 100, 50);
+		cards[5].setBounds(650, 150, 100, 50);
+		cards[6].setBounds(750, 150, 100, 50);
+		cards[7].setBounds(850, 150, 100, 50);
+
 		add(cards[0]);
 		add(cards[1]);
 		add(cards[2]);
@@ -70,8 +69,7 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		add(cards[5]);
 		add(cards[6]);
 		add(cards[7]);
-		
-		
+
 		setBackground(Color.white);
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -95,7 +93,7 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		Image leftBoard = new ImageIcon("boardM.png").getImage();
 		g.drawImage(leftBoard, 5 * 30, 7 * 30, 120, 240, this);
 		repaint();
-		//*******Draw the car************
+		// *******Draw the car************
 		for (int i = 0; i < 22; i++) {
 			for (int j = 0; j < 14; j++) {
 
@@ -151,52 +149,53 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		}
 		repaint();
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getSource() == cards[0]) {
+
+		if (e.getSource() == cards[0]) {
 			engine.numberOfMoves = engine.cards1[0].numberOfMoves;
 			engine.shift = engine.cards1[0].shift;
 		}
-		
-		if(e.getSource() == cards[1]) {
+
+		if (e.getSource() == cards[1]) {
 			engine.numberOfMoves = engine.cards1[1].numberOfMoves;
 			engine.shift = engine.cards1[1].shift;
 		}
-		
-		if(e.getSource() == cards[2]) {
+
+		if (e.getSource() == cards[2]) {
 			engine.numberOfMoves = engine.cards1[2].numberOfMoves;
 			engine.shift = engine.cards1[2].shift;
-			//System.out.println("number of moves :" + engine.numberOfMoves + "\n shift="+engine.shift);
+			// System.out.println("number of moves :" + engine.numberOfMoves + "\n
+			// shift="+engine.shift);
 		}
-		
-		if(e.getSource() == cards[3]) {
+
+		if (e.getSource() == cards[3]) {
 			engine.numberOfMoves = engine.cards1[3].numberOfMoves;
 			engine.shift = engine.cards1[3].shift;
 		}
-		
-		if(e.getSource() == cards[4]) {
+
+		if (e.getSource() == cards[4]) {
 			engine.numberOfMoves = engine.cards2[0].numberOfMoves;
 			engine.shift = engine.cards2[0].shift;
 		}
-		if(e.getSource() == cards[5]) {
+		if (e.getSource() == cards[5]) {
 			engine.numberOfMoves = engine.cards2[1].numberOfMoves;
 			engine.shift = engine.cards2[1].shift;
 		}
-		if(e.getSource() == cards[6]) {
+		if (e.getSource() == cards[6]) {
 			engine.numberOfMoves = engine.cards2[2].numberOfMoves;
 			engine.shift = engine.cards2[2].shift;
 		}
-		if(e.getSource() == cards[7]) {
+		if (e.getSource() == cards[7]) {
 			engine.numberOfMoves = engine.cards2[3].numberOfMoves;
 			engine.shift = engine.cards2[3].shift;
-		}	
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		
+
 	}
 
 	@Override
@@ -223,12 +222,12 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 				engine.update(iClicked, jClicked, iDragged, jDragged);
 			x = false;
 		}
-		repaint();		
+		repaint();
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		
+
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package rushHour;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
 import java.awt.*;
 
 import java.awt.image.BufferedImage;
@@ -22,10 +20,10 @@ import java.io.IOException;
 import java.io.*;
 import java.util.*;
 
-public class MainScreen implements ActionListener  {
-	
-	//RushHour game;
-	
+public class MainScreen implements ActionListener {
+
+	// RushHour game;
+
 	JButton getHelpBtn;
 	JPanel panel2;
 	JButton playBtn;
@@ -34,411 +32,143 @@ public class MainScreen implements ActionListener  {
 	JButton resumeBtn;
 	BufferedImage logoGame;
 	JLabel logoLabel;
-	JFrame f3 ;
+	JFrame f3;
 	FileReader reader;
-	
-	public MainScreen(int theme, boolean sound) throws IOException
-	{
-		if(theme == 1) {
-			if(sound == true)
-			{
-				//initiliaze
-				 getHelpBtn = new JButton();
-				// game = new RushHour();
-				 panel2 = new JPanel();
-				 playBtn = new JButton();
-				 settingsBtn = new JButton();
-				 credits = new JButton();
-				 resumeBtn = new JButton();
-				 logoGame = ImageIO.read(new File("Logo11.png"));
-				 logoLabel= new JLabel(new ImageIcon(logoGame));
-				 f3 = new JFrame("Rush Hour");
-				 
-					//main panel
-					panel2.setLayout(null);
-									
-					resumeBtn.setVisible(true);
-					resumeBtn.setBounds(350, 200, 300, 100);
-					resumeBtn.setForeground(Color.red);
-					resumeBtn.setBackground(Color.ORANGE);
-					resumeBtn.addActionListener(this);
-					
-					playBtn.setVisible(true);
-					playBtn.setBounds(350, 350, 300, 100);
-					playBtn.setForeground(Color.red);
-					playBtn.setBackground(Color.ORANGE);
-					playBtn.addActionListener(this);
-					
-					settingsBtn.setVisible(true);
-					settingsBtn.setBounds(350, 500, 300, 100);
-					settingsBtn.setForeground(Color.red);
-					settingsBtn.setBackground(Color.ORANGE);
-					settingsBtn.addActionListener(this);
 
-					getHelpBtn.setVisible(true);
-					getHelpBtn.setBounds(350,650,300,100);
-					getHelpBtn.setForeground(Color.red);
-					getHelpBtn.setBackground(Color.ORANGE);
-					getHelpBtn.addActionListener(this);
+	public MainScreen(int theme, boolean sound) throws IOException {
+		// initiliaze
+		getHelpBtn = new JButton();
+		// game = new RushHour();
+		panel2 = new JPanel();
+		playBtn = new JButton();
+		settingsBtn = new JButton();
+		credits = new JButton();
+		resumeBtn = new JButton();
+		logoGame = ImageIO.read(new File("Logo11.png"));
+		logoLabel = new JLabel(new ImageIcon(logoGame));
+		f3 = new JFrame("Rush Hour");
+		// main panel
+		panel2.setLayout(null);
 
-					credits.setVisible(true);
-					credits.setBounds(350,800, 300, 100);
-					credits.setForeground(Color.red);
-					credits.setBackground(Color.ORANGE);
-					//logo
-					logoLabel.setBounds(200, 5, 600, 200);
-					
-					f3.setBackground(Color.MAGENTA);
-					f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					f3.setBounds(900, 800, 900, 800);
-					//f3.add(game);
-					f3.setResizable(false);
+		resumeBtn.setVisible(true);
+		resumeBtn.setBounds(275, 150, 150, 50);
+		resumeBtn.setForeground(Color.red);
+		resumeBtn.setBackground(Color.ORANGE);
+		resumeBtn.addActionListener(this);
 
+		playBtn.setVisible(true);
+		playBtn.setBounds(275, 250, 150, 50);
+		playBtn.setForeground(Color.red);
+		playBtn.setBackground(Color.ORANGE);
+		playBtn.addActionListener(this);
 
-					f3.add(panel2);
-					f3.setLocationRelativeTo(null);
-					f3.setSize(1250,1250);
-					f3.setVisible(true);
-					
-					resumeBtn.setText("Resume");
-					resumeBtn.setFont(new Font("Serif", Font.ITALIC,25));
-					
-					playBtn.setText("Play");
-					playBtn.setFont(new Font("Serif", Font.ITALIC,25));
-					
-					settingsBtn.setText("Settings");
-					settingsBtn.setFont(new Font("Serif", Font.ITALIC,25));
+		settingsBtn.setVisible(true);
+		settingsBtn.setBounds(275, 350, 150, 50);
+		settingsBtn.setForeground(Color.red);
+		settingsBtn.setBackground(Color.ORANGE);
+		settingsBtn.addActionListener(this);
 
-					getHelpBtn.setText("Get Help");
-					getHelpBtn.setFont(new Font("Serif", Font.ITALIC,25));
+		getHelpBtn.setVisible(true);
+		getHelpBtn.setBounds(275, 450, 150, 50);
+		getHelpBtn.setForeground(Color.red);
+		getHelpBtn.setBackground(Color.ORANGE);
+		getHelpBtn.addActionListener(this);
 
-					credits.setText("Credits");
-					credits.setFont(new Font("Serif", Font.ITALIC,25));
+		credits.setVisible(true);
+		credits.setBounds(275, 550, 150, 50);
+		credits.setForeground(Color.red);
+		credits.setBackground(Color.ORANGE);
+		credits.addActionListener(this);
 
-					panel2.setBackground(Color.white);
-					panel2.add(resumeBtn);
-					panel2.add(playBtn);
-					panel2.add(settingsBtn);
-					panel2.add(getHelpBtn);
-					panel2.add(credits);
-					panel2.add(logoLabel);
-					
-			}
-			if(sound == false)
-			{
-				//initiliaze
-				 getHelpBtn = new JButton();
-				// game = new RushHour();
-				 panel2 = new JPanel();
-				 playBtn = new JButton();
-				 resumeBtn = new JButton();
-				 settingsBtn = new JButton();
-				 credits = new JButton();
-				 logoGame = ImageIO.read(new File("Logo11.png"));
-				 logoLabel= new JLabel(new ImageIcon(logoGame));
-				 f3 = new JFrame("Rush Hour");
-				 
-					//main panel
-					panel2.setLayout(null);
-					
-					resumeBtn.setVisible(true);
-					resumeBtn.setBounds(350, 200, 300, 100);
-					resumeBtn.setForeground(Color.red);
-					resumeBtn.setBackground(Color.ORANGE);
-					resumeBtn.addActionListener(this);
-					
-					playBtn.setVisible(true);
-					playBtn.setBounds(350, 350, 300, 100);
-					playBtn.setForeground(Color.red);
-					playBtn.setBackground(Color.ORANGE);
-					playBtn.addActionListener(this);
-					
-					settingsBtn.setVisible(true);
-					settingsBtn.setBounds(350, 500, 300, 100);
-					settingsBtn.setForeground(Color.red);
-					settingsBtn.setBackground(Color.ORANGE);
-					settingsBtn.addActionListener(this);
+		// logo
+		logoLabel.setBounds(50, 5, 600, 200);
 
-					getHelpBtn.setVisible(true);
-					getHelpBtn.setBounds(350,650,300,100);
-					getHelpBtn.setForeground(Color.red);
-					getHelpBtn.setBackground(Color.ORANGE);
-					getHelpBtn.addActionListener(this);
+		f3.setBackground(Color.MAGENTA);
+		f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f3.setBounds(900, 800, 900, 800);
+		// f3.add(game);
+		f3.setResizable(false);
 
-					credits.setVisible(true);
-					credits.setBounds(350,800, 300, 100);
-					credits.setForeground(Color.red);
-					credits.setBackground(Color.ORANGE);
-					//logo
-					logoLabel.setBounds(200, 5, 600, 200);
-					
-					f3.setBackground(Color.MAGENTA);
-					f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					f3.setBounds(900, 800, 900, 800);
-					//f3.add(game);
-					f3.setResizable(false);
+		f3.add(panel2);
+		f3.setLocationRelativeTo(null);
+		f3.setSize(700, 700);
+		f3.setVisible(true);
 
+		resumeBtn.setText("Resume");
+		resumeBtn.setFont(new Font("Serif", Font.ITALIC, 25));
 
-					f3.add(panel2);
-					f3.setLocationRelativeTo(null);
-					f3.setSize(1250,1250);
-					f3.setVisible(true);
-					
-					resumeBtn.setText("Resume");
-					resumeBtn.setFont(new Font("Serif", Font.ITALIC,25));
-					
-					
-					playBtn.setText("Play");
-					playBtn.setFont(new Font("Serif", Font.ITALIC,25));
-					
-					settingsBtn.setText("Settings");
-					settingsBtn.setFont(new Font("Serif", Font.ITALIC,25));
+		playBtn.setText("Play");
+		playBtn.setFont(new Font("Serif", Font.ITALIC, 25));
 
-					getHelpBtn.setText("Get Help");
-					getHelpBtn.setFont(new Font("Serif", Font.ITALIC,25));
+		settingsBtn.setText("Settings");
+		settingsBtn.setFont(new Font("Serif", Font.ITALIC, 25));
 
-					credits.setText("Credits");
-					credits.setFont(new Font("Serif", Font.ITALIC,25));
+		getHelpBtn.setText("Get Help");
+		getHelpBtn.setFont(new Font("Serif", Font.ITALIC, 25));
 
-					panel2.setBackground(Color.white);
-					panel2.add(resumeBtn);
-					panel2.add(playBtn);
-					panel2.add(settingsBtn);
-					panel2.add(getHelpBtn);
-					panel2.add(credits);
-					panel2.add(logoLabel);
-			}
-		
-		}
-		if(theme == 2)
-		{
-			if(sound == true)
-			{
-				//initiliaze
-				 getHelpBtn = new JButton();
-				// game = new RushHour();
-				 panel2 = new JPanel();
-				 playBtn = new JButton();
-				 resumeBtn = new JButton();
-				 settingsBtn = new JButton();
-				 credits = new JButton();
-				 logoGame = ImageIO.read(new File("Logo11.png"));
-				 logoLabel= new JLabel(new ImageIcon(logoGame));
-				 f3 = new JFrame("Rush Hour");
-				 
-					//main panel
-					panel2.setLayout(null);
-					
+		credits.setText("Credits");
+		credits.setFont(new Font("Serif", Font.ITALIC, 25));
 
-					resumeBtn.setVisible(true);
-					resumeBtn.setBounds(350, 200, 300, 100);
-					resumeBtn.setForeground(Color.red);
-					resumeBtn.setBackground(Color.ORANGE);
-					resumeBtn.addActionListener(this);
-					
-					playBtn.setVisible(true);
-					playBtn.setBounds(350, 350, 300, 100);
-					playBtn.setForeground(Color.red);
-					playBtn.setBackground(Color.ORANGE);
-					playBtn.addActionListener(this);
-					
-					settingsBtn.setVisible(true);
-					settingsBtn.setBounds(350, 500, 300, 100);
-					settingsBtn.setForeground(Color.red);
-					settingsBtn.setBackground(Color.ORANGE);
-					settingsBtn.addActionListener(this);
-
-					getHelpBtn.setVisible(true);
-					getHelpBtn.setBounds(350,650,300,100);
-					getHelpBtn.setForeground(Color.red);
-					getHelpBtn.setBackground(Color.ORANGE);
-					getHelpBtn.addActionListener(this);
-
-					credits.setVisible(true);
-					credits.setBounds(350,800, 300, 100);
-					credits.setForeground(Color.red);
-					credits.setBackground(Color.ORANGE);
-					//logo
-					logoLabel.setBounds(200, 5, 600, 200);
-					
-					f3.setBackground(Color.MAGENTA);
-					f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					f3.setBounds(900, 800, 900, 800);
-					//f3.add(game);
-					f3.setResizable(false);
-
-
-					f3.add(panel2);
-					f3.setLocationRelativeTo(null);
-					f3.setSize(1250,1250);
-					f3.setVisible(true);
-					
-					playBtn.setText("Play");
-					playBtn.setFont(new Font("Serif", Font.ITALIC,25));
-					
-					resumeBtn.setText("Resume");
-					resumeBtn.setFont(new Font("Serif", Font.ITALIC,25));
-					
-					settingsBtn.setText("Settings");
-					settingsBtn.setFont(new Font("Serif", Font.ITALIC,25));
-
-					getHelpBtn.setText("Get Help");
-					getHelpBtn.setFont(new Font("Serif", Font.ITALIC,25));
-
-					credits.setText("Credits");
-					credits.setFont(new Font("Serif", Font.ITALIC,25));
-
-					panel2.setBackground(Color.white);
-					panel2.add(playBtn);
-					panel2.add(resumeBtn);
-					panel2.add(settingsBtn);
-					panel2.add(getHelpBtn);
-					panel2.add(credits);
-					panel2.add(logoLabel);
-			}
-			if(sound == false)
-			{
-				//initiliaze
-				 getHelpBtn = new JButton();
-				// game = new RushHour();
-				 panel2 = new JPanel();
-				 resumeBtn = new JButton();
-				 playBtn = new JButton();
-				 settingsBtn = new JButton();
-				 credits = new JButton();
-				 logoGame = ImageIO.read(new File("Logo11.png"));
-				 logoLabel= new JLabel(new ImageIcon(logoGame));
-				 f3 = new JFrame("Rush Hour");
-				 
-					//main panel
-					panel2.setLayout(null);
-					
-					resumeBtn.setVisible(true);
-					resumeBtn.setBounds(350, 200, 300, 100);
-					resumeBtn.setForeground(Color.red);
-					resumeBtn.setBackground(Color.ORANGE);
-					resumeBtn.addActionListener(this);
-					
-					playBtn.setVisible(true);
-					playBtn.setBounds(350, 350, 300, 100);
-					playBtn.setForeground(Color.red);
-					playBtn.setBackground(Color.ORANGE);
-					playBtn.addActionListener(this);
-					
-					settingsBtn.setVisible(true);
-					settingsBtn.setBounds(350, 500, 300, 100);
-					settingsBtn.setForeground(Color.red);
-					settingsBtn.setBackground(Color.ORANGE);
-					settingsBtn.addActionListener(this);
-
-					getHelpBtn.setVisible(true);
-					getHelpBtn.setBounds(350,650,300,100);
-					getHelpBtn.setForeground(Color.red);
-					getHelpBtn.setBackground(Color.ORANGE);
-					getHelpBtn.addActionListener(this);
-
-					credits.setVisible(true);
-					credits.setBounds(350,800, 300, 100);
-					credits.setForeground(Color.red);
-					credits.setBackground(Color.ORANGE);
-					//logo
-					logoLabel.setBounds(200, 5, 600, 200);
-					
-					f3.setBackground(Color.MAGENTA);
-					f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					f3.setBounds(900, 800, 900, 800);
-					//f3.add(game);
-					f3.setResizable(false);
-
-
-					f3.add(panel2);
-					f3.setLocationRelativeTo(null);
-					f3.setSize(1250,1250);
-					f3.setVisible(true);
-					
-					playBtn.setText("Play");
-					playBtn.setFont(new Font("Serif", Font.ITALIC,25));
-					
-					resumeBtn.setText("Resume");
-					resumeBtn.setFont(new Font("Serif", Font.ITALIC,25));
-					
-					settingsBtn.setText("Settings");
-					settingsBtn.setFont(new Font("Serif", Font.ITALIC,25));
-
-					getHelpBtn.setText("Get Help");
-					getHelpBtn.setFont(new Font("Serif", Font.ITALIC,25));
-
-					credits.setText("Credits");
-					credits.setFont(new Font("Serif", Font.ITALIC,25));
-
-					panel2.setBackground(Color.white);
-					panel2.add(playBtn);
-					panel2.add(resumeBtn);
-					panel2.add(settingsBtn);
-					panel2.add(getHelpBtn);
-					panel2.add(credits);
-					panel2.add(logoLabel);
-			}
-		}
+		panel2.setBackground(Color.white);
+		panel2.add(resumeBtn);
+		panel2.add(playBtn);
+		panel2.add(settingsBtn);
+		panel2.add(getHelpBtn);
+		panel2.add(credits);
+		panel2.add(logoLabel);
+		f3.setLocationRelativeTo(null);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		if(evt.getSource() == getHelpBtn)
-		{
-		 try {
-			 f3.setVisible(false);
-			GetHelpScreen helpinfo = new GetHelpScreen();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		}
-		
-		if(evt.getSource() == playBtn)
-		{
+		if (evt.getSource() == getHelpBtn) {
 			try {
-				 f3.setVisible(false);
+				f3.setVisible(false);
+				GetHelpScreen helpinfo = new GetHelpScreen();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (evt.getSource() == credits) {
+			System.out.println("here");
+			try {
+				Credits credit = new Credits();
+				f3.setVisible(false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
+		if (evt.getSource() == playBtn) {
+			try {
+				f3.setVisible(false);
 				GameModeSelectionScreen gameMode = new GameModeSelectionScreen();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		if(evt.getSource() == settingsBtn)
-		{
+		if (evt.getSource() == settingsBtn) {
 			try {
-				
-				Settings settings =  new Settings();
-				f3.setVisible(false); 
+
+				Settings settings = new Settings();
+				f3.setVisible(false);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		if(evt.getSource() == credits)
-		{
-			try {
-				Credits credits = new Credits();
-				f3.setVisible(false); 
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		if(evt.getSource() == resumeBtn)
-		{
+		if (evt.getSource() == resumeBtn) {
 			try {
 				Scanner scanner = new Scanner(new File("resume.txt"));
 				int levelNumber;
 				levelNumber = Integer.valueOf(scanner.nextLine());
-				System.out.println("levelNUMber:"+ levelNumber);
-				SingleLevelSelection selection = new SingleLevelSelection(levelNumber);
+				System.out.println("levelNUMber:" + levelNumber);
+				new DisplayLevelScreen(levelNumber);
+				//screen.startSingleLevel(levelNumber);
 				scanner.close();
-				f3.setVisible(false); 
-			
+				f3.setVisible(false);
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
