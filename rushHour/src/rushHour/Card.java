@@ -8,7 +8,7 @@ public class Card {
 	public Card() {
 		shift = Math.random() < 0.25;
 		if (!shift)
-			if (Math.random() < 0.33)
+			if (Math.random() < 0.25)
 				numberOfMoves = -1;
 
 		if (numberOfMoves != -1)

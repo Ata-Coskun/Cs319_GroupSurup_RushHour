@@ -35,7 +35,7 @@ public class MultiGameEngine extends GameEngine {
 		numberOfMoves = 0;
 		shift = false;
 
-		new MultiGameScreen(this);
+		gameScreen = new MultiGameScreen(this);
 
 		turnSwap();
 	}
@@ -44,10 +44,7 @@ public class MultiGameEngine extends GameEngine {
 	boolean update(int i, int j, int iDragged, int jDragged) {
 
 		if ((i >= 0 && i < 22 && iDragged >= 0 && iDragged < 22)) {
-			if (shift && ((j >= 0 && j < 5) || (j >= 9 && j < 14)) && board.coordinates[i][j] == 3 && i != iDragged) { // if
-																														// shift
-																														// is
-																														// enabled
+			if (shift && ((j >= 0 && j < 5) || (j >= 9 && j < 14)) && board.coordinates[i][j] == 3 && i != iDragged) { // if shift is enabled
 				shift = !board.moveBoard(i, j, iDragged);
 				System.out.println("shifted");
 				// gameScreen.repaint();
@@ -76,15 +73,12 @@ public class MultiGameEngine extends GameEngine {
 		}
 
 		if (!shift && numberOfMoves == 0) {
-			gameScreen.repaint();
 			turnSwap();
-
 		}
 		return true;
 	}
 
 	public void turnSwap() {
-		turn = !turn;
 		Card[] cards;
 		if (turn)
 			cards = cards1;
@@ -100,7 +94,7 @@ public class MultiGameEngine extends GameEngine {
 		//
 		// numberOfMoves = cards[choice].numberOfMoves;
 		// shift = cards[choice].shift;
-
+		System.out.println("sdfsdfs");
 		for (int i = 0; i < 3; i++)
 			if (i >= choice) {
 				cards[i].shift = cards[i + 1].shift;
@@ -108,5 +102,6 @@ public class MultiGameEngine extends GameEngine {
 			}
 
 		cards[3] = new Card();
+		turn = !turn;
 	}
 }

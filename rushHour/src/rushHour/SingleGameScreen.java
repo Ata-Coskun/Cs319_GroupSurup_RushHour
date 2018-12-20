@@ -28,7 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
 public class SingleGameScreen extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
 
 	static int iDragged = 0, jDragged = 0;
@@ -46,19 +45,20 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	boolean mute;
 	File file = new File("OffLimits.wav");
 	Stack<Integer> Q;
-	int level;
 	int endGame;
 	int theme;
 	//
-	JButton undoButton = new JButton("UNDO");;
-	JButton muteButton = new JButton("MUTE");;
-	JButton changeTheme = new JButton("CHANGE THEME");;
-	JButton hintButton = new JButton("HINT");;
-	JButton replayButton = new JButton("REPLAY");;
+	JButton undoButton;
+	JButton muteButton;
+	JButton changeTheme;
+	JButton hintButton;
+	JButton replayButton;
+	JLabel NOfMoves;
 	File scoreFile;
 	File resumeFile;
 	PrintWriter writer;
 	PrintWriter resumeWriter;
+	PrintWriter winWriter;
 	Image rock;
 	Image boardImage;
 	Image redCar;
@@ -70,7 +70,7 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	String scoreDatas; // it is our dataset for high scores
 	// int timeCounter;
 
-	public SingleGameScreen(SingleGameEngine engine, int theme, Stack Q) throws IOException {
+	public SingleGameScreen(SingleGameEngine engine, int theme, Stack<Integer> Q) throws IOException {
 		time = 0;
 
 		System.out.println(Q.size());
@@ -81,39 +81,55 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		this.board = engine.board;
 		this.Q = Q;
 		this.levelNo = engine.level;
-		//System.out.println("engine level: "+ engine.level);
+		// System.out.println("engine level: "+ engine.level);
 		// time = 10;
 
 		setBackground(Color.white);
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setLayout(null);
-
-		hintButton.setBackground(Color.yellow);
-		hintButton.setForeground(Color.red);
-		hintButton.addActionListener(this);
-		replayButton.setBackground(Color.yellow);
-		replayButton.setForeground(Color.red);
-		replayButton.addActionListener(this);
+		
+		undoButton = new JButton("UNDO");
+		muteButton = new JButton("MUTE");
+		changeTheme = new JButton("CHANGE THEME");
+		hintButton = new JButton("HINT");
+		replayButton = new JButton("REPLAY");
+		NOfMoves = new JLabel();
+		
 		undoButton.setBackground(Color.yellow);
 		undoButton.setForeground(Color.red);
 		undoButton.addActionListener(this);
+		undoButton.setBounds(525, 50, 100, 50);
+		
+		replayButton.setBackground(Color.yellow);
+		replayButton.setForeground(Color.red);
+		replayButton.addActionListener(this);
+		replayButton.setBounds(525, 110, 100, 50);
+	
+		hintButton.setBackground(Color.yellow);
+		hintButton.setForeground(Color.red);
+		hintButton.addActionListener(this);
+		hintButton.setBounds(525, 170, 100, 50);
+		
 		muteButton.addActionListener(this);
 		muteButton.setBackground(Color.yellow);
 		muteButton.setForeground(Color.red);
+		muteButton.setBounds(525, 230, 100, 50);
+		
 		changeTheme.addActionListener(this);
 		changeTheme.setBackground(Color.yellow);
 		changeTheme.setForeground(Color.red);
-		undoButton.setBounds(525, 50, 100, 50);
-		replayButton.setBounds(525, 110, 100, 50);
-		hintButton.setBounds(525, 170, 100, 50);
-		muteButton.setBounds(525, 230, 100, 50);
 		changeTheme.setBounds(500, 290, 150, 50);
+		
+		NOfMoves.setBounds(550, 5, 150, 15);
+		
 		add(undoButton);
+		add(replayButton);
+		add(hintButton);
 		add(muteButton);
 		add(changeTheme);
-		add(hintButton);
-		add(replayButton);
+		add(NOfMoves);
+		
 		mute = false;
 		play(file, mute);
 
@@ -121,68 +137,77 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		resumeFile = new File("resume.txt");
 		readFile(); // get the high score from file
 
-		//BufferedWriter out = new BufferedWriter(new FileWriter(scoreFile));
+		// BufferedWriter out = new BufferedWriter(new FileWriter(scoreFile));
 		writer = new PrintWriter(scoreFile);
-		writeFile(true,highScore);
+		winWriter = new PrintWriter(scoreFile);
+		writeFile(false, highScore);
 		resumeWriter = new PrintWriter(resumeFile);
-		resumeWriter.println(levelNo+"");
+		resumeWriter.println(levelNo + "");
 		resumeWriter.close();
 	}
 
-	public void readFile() throws IOException {		
+	public void readFile() throws IOException {
 		Scanner scanner = new Scanner(scoreFile);
 		scoreDatas = scanner.nextLine();
 		System.out.println("datas: " + scoreDatas);
 		String score = scoreDatas.charAt(0) + "";
 		int i = 0;
 		int counter = 0;
-		int charCounter =0;
-		while (counter != levelNo) {			
-			if (scoreDatas.charAt(i) == ',') 
+		int charCounter = 0;
+		while (counter != levelNo) {
+			if (scoreDatas.charAt(i) == ',')
 				counter++;
-			if(counter == levelNo-1)
+			if (counter == levelNo - 1)
 				charCounter++;
 			i++;
 		}
-		if(counter>1)
+		if (counter > 1)
 			charCounter--;
-		score = scoreDatas.substring(i-1-charCounter,i-1);
+		score = scoreDatas.substring(i - 1 - charCounter, i - 1);
 		highScore = Integer.valueOf(score);
 		System.out.println("High score: " + highScore);
 		scanner.close();
 	}
 
 	public void writeFile(boolean high, int highscore) throws IOException {
+
 		
+		if(high == false) {
+		   writer.println(scoreDatas);
+		   writer.close();
+		}
+	    else {
 		String score = scoreDatas.charAt(0) + "";
 		String temp1;
 		String temp2;
 		int i = 0;
 		int counter = 0;
-		int charCounter =0;
-		while (counter != levelNo) {			
-			if (scoreDatas.charAt(i) == ',') 
+		int charCounter = 0;
+		while (counter != levelNo) {
+			if (scoreDatas.charAt(i) == ',')
 				counter++;
-			if(counter == levelNo-1)
+			if (counter == levelNo - 1)
 				charCounter++;
 			i++;
 		}
-		if(counter>1)
+		if (counter > 1)
 			charCounter--;
-		
-		temp1 = scoreDatas.substring(0,i-1-charCounter);
-		temp2 = scoreDatas.substring(i-1,scoreDatas.length());
+
+		temp1 = scoreDatas.substring(0, i - 1 - charCounter);
+		temp2 = scoreDatas.substring(i - 1, scoreDatas.length());
 		temp1 += highscore;
-		writer.println(temp1+temp2); 
-		writer.close();
+
+		winWriter.println(temp1 + temp2);
+		winWriter.close();
+		}
 
 	}
 
 	public void checkWin() throws IOException {
 		if (win) {
-			if(engine.calculateScore(time,numberOfMoves) > highScore) // new score is highest
-			writeFile(true,engine.calculateScore(time, numberOfMoves)); // update file
-
+			System.out.println("End score: "+engine.calculateScore(time, numberOfMoves));
+			if (engine.calculateScore(time, numberOfMoves)+1 > highScore) // new score is highest
+				writeFile(true, engine.calculateScore(time, numberOfMoves)+1); // update file
 			Object[] options = { "Turn back to main", "Next Level", "EXIT" };
 			endGame = JOptionPane.showOptionDialog(null, options,
 					"WIN!\nYou finished in " + numberOfMoves + " number of moves", JOptionPane.YES_NO_CANCEL_OPTION,
@@ -300,6 +325,9 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 							j += 2;
 						}
 				}
+		
+
+		NOfMoves.setText("Number of moves: " + numberOfMoves);
 		repaint();
 		/*
 		 * if(win) { this.setVisible(false); undoButton.setVisible(false);
@@ -311,48 +339,27 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-
-		if (evt.getSource() == undoButton) {
-			if ((level == 1 && Q.size() != 0) || (level == 2 && Q.size() > 24))
-				if (engine.update(Q.pop(), Q.pop(), Q.pop(), Q.pop()))
-					numberOfMoves--;
-//	    	   board = Q.peek();
-			System.out.println("new :  " + Q.size());
-			repaint();
-		} else if (evt.getSource() == hintButton) {
-			if (Q.size() != 0)
+		if (evt.getSource() == undoButton && ((levelNo == 1 && Q.size() != 0) || (levelNo == 2 && Q.size() > 24))
+				&& engine.update(Q.pop(), Q.pop(), Q.pop(), Q.pop()))
+			numberOfMoves--;
+		else if (evt.getSource() == hintButton && Q.size() != 0)
+			engine.update(Q.pop(), Q.pop(), Q.pop(), Q.pop());
+		else if (evt.getSource() == replayButton)
+			while (levelNo == 2 && Q.size() > 24)
 				engine.update(Q.pop(), Q.pop(), Q.pop(), Q.pop());
-//	    	   board = Q.peek();
-			System.out.println("new :  " + Q.size());
-			repaint();
-		} else if (evt.getSource() == replayButton) {
-			while(level == 2 && Q.size() > 24)
-				engine.update(Q.pop(), Q.pop(), Q.pop(), Q.pop());
-			repaint();
-		} else if (evt.getSource() == muteButton) {
-
-			if (mute == false) {
+		else if (evt.getSource() == muteButton)
+			if (mute) {
+				mute = false;
+				play(file, mute);
+				return;
+			} else {
 				mute = true;
 				myClip.stop();
 				return;
 			}
-
-			if (mute == true) {
-				mute = false;
-				play(file, mute);
-				return;
-			}
-
-			repaint();
-
-		} else if (evt.getSource() == changeTheme) {
-			if (theme == 1)
-				theme = 2;
-			else
-				theme = 1;
-			repaint();
-
-		}
+		else if (evt.getSource() == changeTheme)
+			theme = (theme % 2) + 1;
+		repaint();
 	}
 
 	@Override
@@ -361,10 +368,11 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		x = true;
-		iClicked = e.getY() / 75;
-		jClicked = e.getX() / 75;
-		repaint();
+		if (e.getX() < 420) {
+			x = true;
+			iClicked = e.getY() / 75;
+			jClicked = e.getX() / 75;
+		}
 	}
 
 	@Override
@@ -375,21 +383,18 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	@Override
 	public void mouseReleased(MouseEvent e) {
 
-		iDragged = e.getY() / 75;
-		jDragged = e.getX() / 75;
 		if (x) {
-
+			iDragged = e.getY() / 75;
+			jDragged = e.getX() / 75;
 			if (engine.update(iClicked, jClicked, iDragged, jDragged)) {
 				numberOfMoves++;
 				Q.push(jClicked);
 				Q.push(iClicked);
 				Q.push(jDragged);
 				Q.push(iDragged);
-				// board.Q.push(board);
 			}
 			x = false;
 		}
-		repaint();
 	}
 
 	@Override

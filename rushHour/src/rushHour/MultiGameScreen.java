@@ -1,16 +1,17 @@
 package rushHour;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class MultiGameScreen extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
@@ -24,6 +25,7 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	boolean win;
 	MultiGameEngine engine;
 	JButton[] cards;
+	JLabel text, p1, p2;
 
 	public MultiGameScreen(MultiGameEngine engine) {
 		this.engine = engine;
@@ -51,21 +53,33 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		cards[6].addActionListener(this);
 		cards[7].addActionListener(this);
 
-		cards[0].setBounds(550, 50, 100, 50);
-		cards[1].setBounds(650, 50, 100, 50);
-		cards[2].setBounds(750, 50, 100, 50);
-		cards[3].setBounds(850, 50, 100, 50);
+		cards[0].setBounds(450, 50, 100, 145);
+		cards[1].setBounds(550, 50, 100, 145);
+		cards[2].setBounds(650, 50, 100, 145);
+		cards[3].setBounds(750, 50, 100, 145);
 
-		cards[4].setBounds(550, 150, 100, 50);
-		cards[5].setBounds(650, 150, 100, 50);
-		cards[6].setBounds(750, 150, 100, 50);
-		cards[7].setBounds(850, 150, 100, 50);
+		p1 = new JLabel();
+		p1.setBounds(450, 15, 200, 30);
+		p1.setText("Player 1's Cards");
+		text = new JLabel();
+		text.setBounds(450, 200, 400, 30);
+		p2 = new JLabel();
+		p2.setBounds(450, 400, 200, 30);
+		p2.setText("Player 2's Cards");
+
+		cards[4].setBounds(450, 250, 100, 145);
+		cards[5].setBounds(550, 250, 100, 145);
+		cards[6].setBounds(650, 250, 100, 145);
+		cards[7].setBounds(750, 250, 100, 145);
 
 		add(cards[0]);
 		add(cards[1]);
 		add(cards[2]);
 		add(cards[3]);
 		add(cards[4]);
+		add(p1);
+		add(p2);
+		add(text);
 		add(cards[5]);
 		add(cards[6]);
 		add(cards[7]);
@@ -92,7 +106,6 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 				}
 		Image leftBoard = new ImageIcon("boardM.png").getImage();
 		g.drawImage(leftBoard, 5 * 30, 7 * 30, 120, 240, this);
-		repaint();
 		// *******Draw the car************
 		for (int i = 0; i < 22; i++) {
 			for (int j = 0; j < 14; j++) {
@@ -125,9 +138,7 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 					}
 				}
 			}
-			repaint();
 		}
-		repaint();
 		for (int j = 0; j < 14; j++) {
 			for (int i = 0; i < 22; i++) {
 
@@ -145,52 +156,93 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 						}
 				}
 			}
-			repaint();
 		}
+		for (int i = 0; i < 4; i++) {
+			cards[i].setIcon(new ImageIcon(
+					new ImageIcon("cards/" + engine.cards1[i].numberOfMoves + engine.cards1[i].shift + ".png")
+							.getImage()));
+			cards[i + 4].setIcon(new ImageIcon(
+					new ImageIcon("cards/" + engine.cards2[i].numberOfMoves + engine.cards2[i].shift + ".png")
+							.getImage()));
+		}
+
+		if (engine.turn && (engine.shift || engine.numberOfMoves != 0))
+			text.setText("Player 1's turn to play.    Remaining Number of Moves: " + engine.numberOfMoves + "   Shift: "
+					+ engine.shift);
+		else if (engine.turn && !(engine.shift || engine.numberOfMoves != 0))
+			text.setText("Player 1's turn to pick a card");
+		else if (!engine.turn && (engine.shift || engine.numberOfMoves != 0))
+			text.setText("Player 2's turn to play.    Remaining Number of Moves: " + engine.numberOfMoves + "   Shift: "
+					+ engine.shift);
+		else if (!engine.turn && !(engine.shift || engine.numberOfMoves != 0))
+			text.setText("Player 2's turn to pick a card");
+
+		if (x) {
+			g.setColor(Color.MAGENTA);
+			for (int i = 1; i < 22; i++)
+				g.drawLine(0, 30 * i, 420, 30 * i);
+			g.setColor(Color.CYAN);
+			for (int i = 1; i < 14; i++)
+				g.drawLine(30 * i, 0, 30 * i, 660);
+		}
+
 		repaint();
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == cards[0]) {
-			engine.numberOfMoves = engine.cards1[0].numberOfMoves;
-			engine.shift = engine.cards1[0].shift;
-		}
+		if (engine.numberOfMoves == 0 && !engine.shift)
+			if (engine.turn) {
+				if (e.getSource() == cards[0]) {
+					engine.numberOfMoves = engine.cards1[0].numberOfMoves;
+					engine.shift = engine.cards1[0].shift;
+					engine.choice = 0;
+				}
 
-		if (e.getSource() == cards[1]) {
-			engine.numberOfMoves = engine.cards1[1].numberOfMoves;
-			engine.shift = engine.cards1[1].shift;
-		}
+				else if (e.getSource() == cards[1]) {
+					engine.numberOfMoves = engine.cards1[1].numberOfMoves;
+					engine.shift = engine.cards1[1].shift;
+					engine.choice = 1;
+				}
 
-		if (e.getSource() == cards[2]) {
-			engine.numberOfMoves = engine.cards1[2].numberOfMoves;
-			engine.shift = engine.cards1[2].shift;
-			// System.out.println("number of moves :" + engine.numberOfMoves + "\n
-			// shift="+engine.shift);
-		}
+				else if (e.getSource() == cards[2]) {
+					engine.numberOfMoves = engine.cards1[2].numberOfMoves;
+					engine.shift = engine.cards1[2].shift;
+					engine.choice = 2;
+				}
 
-		if (e.getSource() == cards[3]) {
-			engine.numberOfMoves = engine.cards1[3].numberOfMoves;
-			engine.shift = engine.cards1[3].shift;
-		}
+				else if (e.getSource() == cards[3]) {
+					engine.numberOfMoves = engine.cards1[3].numberOfMoves;
+					engine.shift = engine.cards1[3].shift;
+					engine.choice = 3;
+				}
+			} else {
+				if (e.getSource() == cards[4]) {
+					engine.numberOfMoves = engine.cards2[0].numberOfMoves;
+					engine.shift = engine.cards2[0].shift;
+					engine.choice = 0;
+				}
 
-		if (e.getSource() == cards[4]) {
-			engine.numberOfMoves = engine.cards2[0].numberOfMoves;
-			engine.shift = engine.cards2[0].shift;
-		}
-		if (e.getSource() == cards[5]) {
-			engine.numberOfMoves = engine.cards2[1].numberOfMoves;
-			engine.shift = engine.cards2[1].shift;
-		}
-		if (e.getSource() == cards[6]) {
-			engine.numberOfMoves = engine.cards2[2].numberOfMoves;
-			engine.shift = engine.cards2[2].shift;
-		}
-		if (e.getSource() == cards[7]) {
-			engine.numberOfMoves = engine.cards2[3].numberOfMoves;
-			engine.shift = engine.cards2[3].shift;
-		}
+				else if (e.getSource() == cards[5]) {
+					engine.numberOfMoves = engine.cards2[1].numberOfMoves;
+					engine.shift = engine.cards2[1].shift;
+					engine.choice = 1;
+				}
+
+				else if (e.getSource() == cards[6]) {
+					engine.numberOfMoves = engine.cards2[2].numberOfMoves;
+					engine.shift = engine.cards2[2].shift;
+					engine.choice = 2;
+				}
+
+				else if (e.getSource() == cards[7]) {
+					engine.numberOfMoves = engine.cards2[3].numberOfMoves;
+					engine.shift = engine.cards2[3].shift;
+					engine.choice = 3;
+				}
+			}
 	}
 
 	@Override
@@ -201,10 +253,11 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	@Override
 	public void mousePressed(MouseEvent e) {
 
-		x = true;
-
-		iClicked = e.getY() / 30;
-		jClicked = e.getX() / 30;
+		if (e.getX() < 420 && (engine.numberOfMoves != 0 || engine.shift)) {
+			x = true;
+			iClicked = e.getY() / 30;
+			jClicked = e.getX() / 30;
+		}
 		repaint();
 	}
 
@@ -215,14 +268,13 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		iDragged = e.getY() / 30;
-		jDragged = e.getX() / 30;
 		if (x) {
+			iDragged = e.getY() / 30;
+			jDragged = e.getX() / 30;
 			if (!board.getWin())
 				engine.update(iClicked, jClicked, iDragged, jDragged);
 			x = false;
 		}
-		repaint();
 	}
 
 	@Override

@@ -60,18 +60,22 @@ public class GameModeSelectionScreen extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
+		f.setVisible(false);
 		if (evt.getSource() == singleMode) {
 			try {
-				f.setVisible(false);
-				DisplayLevelScreen levels = new DisplayLevelScreen();
+				new DisplayLevelScreen(false);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		if (evt.getSource() == multiMode) {
-			f.setVisible(false);
-			MultiGameScreen multi = new MultiGameScreen(new MultiGameEngine());
+		else if (evt.getSource() == multiMode) {
+			try {
+				new DisplayLevelScreen(true);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

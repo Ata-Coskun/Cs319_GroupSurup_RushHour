@@ -18,12 +18,20 @@ public class Board {
 		if (gameMode) {
 			height = 22;
 			width = 14;
-		}
-		else 
-			height = width = 6;
-			
 			coordinates = new int[height][width];
-			
+			for (int i = 0; i < 22; i++)
+				for (int j = 0; j < 14; j++)
+					if (i < 7 || i > 14)
+						coordinates[i][j] = 4;
+					else if (i == 7 || i == 14)
+						coordinates[i][j] = 3;
+					else if (i > 7 && i < 14)
+						coordinates[i][j] = 0;
+
+		} else {
+			height = width = 6;
+			coordinates = new int[height][width];
+		}
 		cars = new ArrayList<Car>();
 		obstacles = new ArrayList<Obstacle>();
 		win = false;
@@ -50,7 +58,6 @@ public class Board {
 			System.out.println("You cannot move this car");
 			return false;
 		}
-			
 
 		if (tempt.size == 3) {
 			if (tempt.direction) {
@@ -119,7 +126,7 @@ public class Board {
 			for (int b = tempt.j1; b <= tempt.j2; b++)
 				coordinates[a][b] = 1;
 
-		if((tempt.carType == 1 && tempt.j2 == width - 1) || (tempt.carType == 2 && tempt.j1 == 0)) {
+		if ((tempt.carType == 1 && tempt.j2 == width - 1) || (tempt.carType == 2 && tempt.j1 == 0)) {
 			System.out.println("Congralations general, the winner is player number: " + tempt.carType);
 			win = true;
 		}
@@ -182,12 +189,11 @@ public class Board {
 							coordinates[a][b] = 4;
 						successful = true;
 					}
-			if(successful)
-				for (Car car : cars) 
-					if ((jFor == 0 && car.j1 < 5) || (jFor == 9 && car.j1 > 8)) 
+			if (successful)
+				for (Car car : cars)
+					if ((jFor == 0 && car.j1 < 5) || (jFor == 9 && car.j1 > 8))
 						car.elevate(car.i1 + (iDragged - i));
-		
-			
+
 			System.out.println("true");
 			return true;
 		} else {
@@ -196,19 +202,6 @@ public class Board {
 		}
 	}
 
-	public void setInitialBoard() {
-		for (int i = 0; i < 22; i++) {
-			for (int j = 0; j < 14; j++) {
-				if (i < 7 || i > 14)
-					coordinates[i][j] = 4;
-				if (i == 7 || i == 14)
-					coordinates[i][j] = 3;
-				if (i > 7 && i < 14)
-					coordinates[i][j] = 0;
-			}
-		}
-	}
-	
 	public boolean getWin() {
 		return win;
 	}

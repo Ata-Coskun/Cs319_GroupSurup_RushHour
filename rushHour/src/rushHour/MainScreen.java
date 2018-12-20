@@ -1,24 +1,21 @@
 package rushHour;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import java.awt.*;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.*;
-import java.util.*;
 
 public class MainScreen implements ActionListener {
 
@@ -124,7 +121,7 @@ public class MainScreen implements ActionListener {
 		if (evt.getSource() == getHelpBtn) {
 			try {
 				f3.setVisible(false);
-				GetHelpScreen helpinfo = new GetHelpScreen();
+				new GetHelpScreen();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -133,7 +130,7 @@ public class MainScreen implements ActionListener {
 		if (evt.getSource() == credits) {
 			System.out.println("here");
 			try {
-				Credits credit = new Credits();
+				new Credits();
 				f3.setVisible(false);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -143,7 +140,7 @@ public class MainScreen implements ActionListener {
 		if (evt.getSource() == playBtn) {
 			try {
 				f3.setVisible(false);
-				GameModeSelectionScreen gameMode = new GameModeSelectionScreen();
+				new GameModeSelectionScreen();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -152,7 +149,7 @@ public class MainScreen implements ActionListener {
 		if (evt.getSource() == settingsBtn) {
 			try {
 
-				Settings settings = new Settings();
+				new Settings();
 				f3.setVisible(false);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -165,7 +162,6 @@ public class MainScreen implements ActionListener {
 				levelNumber = Integer.valueOf(scanner.nextLine());
 				System.out.println("levelNUMber:" + levelNumber);
 				new DisplayLevelScreen(levelNumber);
-				//screen.startSingleLevel(levelNumber);
 				scanner.close();
 				f3.setVisible(false);
 
