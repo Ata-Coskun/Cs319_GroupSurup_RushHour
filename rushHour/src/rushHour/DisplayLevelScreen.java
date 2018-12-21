@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Stack;
 
@@ -28,7 +29,7 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 		panel.setLayout(null);
 		if (gameMode) {
 			board = new Board(true);
-			startMultiLevel(1);
+			startMultiLevel(5);
 		} else {
 			board = new Board(false);
 			btn = new JButton();
@@ -85,11 +86,14 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 	}
 
 	public DisplayLevelScreen(int level) throws IOException {
-		if (level <= 4) // it is single level
+		if (level <= 4) { // it is single level
 			board = new Board(false);
-		else
+		    startSingleLevel(level);
+		}
+		else {
 			board = new Board(true);
-		startSingleLevel(level);
+			startMultiLevel(level);
+		}
 	}
 
 	@Override
@@ -193,7 +197,8 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 		f1.setLocationRelativeTo(null);
 	}
 
-	public void startMultiLevel(int level) {
+	public void startMultiLevel(int level) throws FileNotFoundException {
+		if(level == 5) {
 		board.setCar(9, 9, 0, 1, 1);
 		board.setCar(9, 11, 3, 3, 0);
 		board.setCar(8, 9, 4, 4, 0);
@@ -208,8 +213,12 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 		board.setCar(12, 13, 9, 9, 0);
 		board.setCar(10, 12, 10, 10, 0);
 		board.setCar(12, 12, 12, 13, 2);
+		}
+		else { // add new level as an 6th level. 1-2-3-4 are single level don't change it.
+		
+		}
 
-		MultiGameEngine multiEngine = new MultiGameEngine(board);
+		MultiGameEngine multiEngine = new MultiGameEngine(board,level);
 		f = new JFrame("Multi Rush Hour");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.add(multiEngine.gameScreen);

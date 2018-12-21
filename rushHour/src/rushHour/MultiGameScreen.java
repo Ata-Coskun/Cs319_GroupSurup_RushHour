@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,16 +23,19 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	Board board;
 
 	int numberOfMoves;
-
+    int levelNo;
 	boolean x;
 	boolean win;
 	MultiGameEngine engine;
 	JButton[] cards;
 	JLabel text, p1, p2;
-
-	public MultiGameScreen(MultiGameEngine engine) {
+	PrintWriter resumeWriter;
+	File resumeFile;
+	public MultiGameScreen(MultiGameEngine engine) throws FileNotFoundException {
 		this.engine = engine;
 		this.board = engine.board;
+		this.levelNo = engine.level;
+		System.out.println("multi engine level: " +  engine.level);
 		setLayout(null);
 		cards = new JButton[8];
 		setLayout(null);
@@ -87,6 +93,12 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		setBackground(Color.white);
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		
+		resumeFile = new File("resume.txt");
+		System.out.println("multi level no:" + levelNo);
+		resumeWriter = new PrintWriter(resumeFile);
+		resumeWriter.println(levelNo + "");
+		resumeWriter.close();
 	}
 
 	@Override

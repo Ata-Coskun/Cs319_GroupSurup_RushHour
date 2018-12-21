@@ -1,5 +1,6 @@
 package rushHour;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -14,16 +15,15 @@ public class MultiGameEngine extends GameEngine {
 	int choice;
 	int numberOfMoves;
 	boolean shift;
-
 	Scanner scan = new Scanner(System.in);
 
 	public MultiGameEngine() {
 	}
 
-	public MultiGameEngine(Board board) {
+	public MultiGameEngine(Board board,int level) throws FileNotFoundException {
 		this.board = board;
 		turn = false;
-
+		this.level = level;
 		cards1 = new Card[4];
 		cards2 = new Card[4];
 

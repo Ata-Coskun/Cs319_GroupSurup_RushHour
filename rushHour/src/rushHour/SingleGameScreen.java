@@ -43,7 +43,9 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	Timer myTimer = new Timer();
 	public Clip myClip;
 	boolean mute;
-	File file = new File("OffLimits.wav");
+	File theme1file = new File("OffLimits.wav");
+	//File theme2file = new File("");
+	File theme3file = new File("Ankara.mp3");
 	Stack<Integer> Q;
 	int endGame;
 	int theme;
@@ -131,7 +133,10 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		add(NOfMoves);
 		
 		mute = false;
-		play(file, mute);
+		if(theme == 1)
+		play(theme1file, mute);
+		if(theme == 2)
+	    play(theme1file,mute);
 
 		scoreFile = new File("high_score.txt");
 		resumeFile = new File("resume.txt");
@@ -347,18 +352,41 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		else if (evt.getSource() == replayButton)
 			while (levelNo == 2 && Q.size() > 24)
 				engine.update(Q.pop(), Q.pop(), Q.pop(), Q.pop());
-		else if (evt.getSource() == muteButton)
-			if (mute) {
+		else if (evt.getSource() == muteButton) {
+			
+			if (mute && theme == 1) {
 				mute = false;
-				play(file, mute);
+				play(theme1file, mute);
 				return;
-			} else {
+			}
+			else if(mute && theme == 2) {
+					mute = false;
+					play(theme1file, mute);
+					return;
+			}
+	    else {
 				mute = true;
 				myClip.stop();
 				return;
+	       }
 			}
-		else if (evt.getSource() == changeTheme)
+		else if (evt.getSource() == changeTheme) {
 			theme = (theme % 2) + 1;
+			if(theme == 1) {
+				mute =false;
+				myClip.stop();
+				play(theme1file, mute);
+				return;
+			}
+			if(theme == 2) {
+				mute =false;
+				myClip.stop();
+				play(theme3file, mute);
+				return;
+			}
+				
+				
+		}
 		repaint();
 	}
 
