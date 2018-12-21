@@ -10,6 +10,7 @@ public class Board {
 
 	ArrayList<Car> cars;
 	ArrayList<Obstacle> obstacles;
+	Portal portals;
 	int height;
 	int width;
 	boolean win;
@@ -47,6 +48,10 @@ public class Board {
 	public void setObstacle(int i, int j) {
 		coordinates[i][j] = 2;
 		obstacles.add(new Obstacle(i, j));
+	}
+
+	public void setPortal(int i1, int i2, int j1, int j2) {
+		portals = new Portal(i1, i2, j1, j2);
 	}
 
 	public boolean moveCar(int i, int j, int iDragged, int jDragged, boolean turn) {
@@ -126,9 +131,23 @@ public class Board {
 			for (int b = tempt.j1; b <= tempt.j2; b++)
 				coordinates[a][b] = 1;
 
-		if ((tempt.carType == 1 && tempt.j2 == width - 1) || (tempt.carType == 2 && tempt.j1 == 0)) {
-			System.out.println("Congralations general, the winner is player number: " + tempt.carType);
+		if (portals == null
+				&& ((tempt.carType == 1 && tempt.j2 == width - 1) || (tempt.carType == 2 && tempt.j1 == 0))) {
 			win = true;
+			return true;
+		} else if (portals != null && (tempt.carType == 1 && tempt.i2 == height - 1)) {
+			win = true;
+			return true;
+		}
+		if (tempt.carType == 1 && portals != null && tempt.j2 == portals.j1) {
+			for (int k = 4; k < 6; k++) {
+				coordinates[tempt.i1][k] = 0;
+				coordinates[k - 4][portals.j2] = 1;
+			}
+			tempt.direction = !tempt.direction;
+			tempt.setCoordinates(0, portals.j2);
+			System.out.println(tempt.carType + " " + tempt.direction + " " + tempt.i1 + " " + tempt.i2 + " " + tempt.j1
+					+ " " + tempt.j2);
 		}
 		return true;
 	}
@@ -143,63 +162,56 @@ public class Board {
 
 	public boolean moveBoard(int i, int j, int iDragged) {
 		int jFor = 0;
-		if ((i >= 0 && i < 22 && iDragged >= 0 && iDragged < 22) && ((j >= 0 && j < 5) || (j >= 9 && j < 14))
-				&& coordinates[i][j] == 3 && i != iDragged) {
 
-			if (j < 5)
-				jFor = 0;
-			if (j > 8)
-				jFor = 9;
+		if (j < 5)
+			jFor = 0;
+		if (j > 8)
+			jFor = 9;
 
-			boolean successful = false;
-			for (Car car : cars) {
-				if (!car.direction && ((jFor == 0 && (car.j1 == 4 || car.j2 == 5))
-						|| (jFor == 9 && (car.j1 == 8 || car.j2 == 9)))) {
-					System.out.println("Car in the middle");
-					return false;
+		// Car in the middle
+		for (Car car : cars)
+			if (!car.direction
+					&& ((jFor == 0 && (car.j1 == 4 || car.j2 == 5)) || (jFor == 9 && (car.j1 == 8 || car.j2 == 9))))
+				return false;
+
+		boolean successful = false;
+		if (i < iDragged) { // aþaðý kaydýrma için
+			for (int b = jFor; b < jFor + 5; b++)
+				if (iDragged <= 14 && coordinates[i + 1][b] < 3) {// if upper part is grabbed
+					for (int a = 7 + iDragged; a >= iDragged; a--)
+						coordinates[a][b] = coordinates[a - iDragged + i][b];
+					for (int a = iDragged - 1; a >= i; a--)
+						coordinates[a][b] = 4;
+					successful = true;
+				} else if (i >= 7 && coordinates[i - 1][b] < 3) {// aþaðýdan tutulduysa
+					for (int a = iDragged; a >= iDragged - 7; a--)
+						coordinates[a][b] = coordinates[a - iDragged + i][b];
+					for (int a = iDragged - 8; a >= i - 7; a--)
+						coordinates[a][b] = 4;
+					successful = true;
 				}
-			}
-			if (i < iDragged) { // aþaðý kaydýrma için
-				for (int b = jFor; b < jFor + 5; b++)
-					if (iDragged <= 14 && coordinates[i + 1][b] < 3) {// if upper part is grabbed
-						for (int a = 7 + iDragged; a >= iDragged; a--)
-							coordinates[a][b] = coordinates[a - iDragged + i][b];
-						for (int a = iDragged - 1; a >= i; a--)
-							coordinates[a][b] = 4;
-						successful = true;
-					} else if (i >= 7 && coordinates[i - 1][b] < 3) {// aþaðýdan tutulduysa
-						for (int a = iDragged; a >= iDragged - 7; a--)
-							coordinates[a][b] = coordinates[a - iDragged + i][b];
-						for (int a = iDragged - 8; a >= i - 7; a--)
-							coordinates[a][b] = 4;
-						successful = true;
-					}
-			} else // yukarý kaydýrma için
-				for (int b = jFor; b < jFor + 5; b++)
-					if (i <= 14 && coordinates[i + 1][b] < 3) {// if upper part is grabbed
-						for (int a = iDragged; a <= iDragged + 7; a++)
-							coordinates[a][b] = coordinates[i + a - iDragged][b];
-						for (int a = iDragged + 8; a < i + 8; a++)
-							coordinates[a][b] = 4;
-						successful = true;
-					} else if (iDragged >= 7) {// aþaðýdan tutulduysa
-						for (int a = iDragged - 7; a <= iDragged; a++)
-							coordinates[a][b] = coordinates[i + a - iDragged][b];
-						for (int a = iDragged + 1; a < i + 1; a++)
-							coordinates[a][b] = 4;
-						successful = true;
-					}
-			if (successful)
-				for (Car car : cars)
-					if ((jFor == 0 && car.j1 < 5) || (jFor == 9 && car.j1 > 8))
-						car.elevate(car.i1 + (iDragged - i));
+		} else // yukarý kaydýrma için
+			for (int b = jFor; b < jFor + 5; b++)
+				if (i <= 14 && coordinates[i + 1][b] < 3) {// if upper part is grabbed
+					for (int a = iDragged; a <= iDragged + 7; a++)
+						coordinates[a][b] = coordinates[i + a - iDragged][b];
+					for (int a = iDragged + 8; a < i + 8; a++)
+						coordinates[a][b] = 4;
+					successful = true;
+				} else if (iDragged >= 7) {// aþaðýdan tutulduysa
+					for (int a = iDragged - 7; a <= iDragged; a++)
+						coordinates[a][b] = coordinates[i + a - iDragged][b];
+					for (int a = iDragged + 1; a < i + 1; a++)
+						coordinates[a][b] = 4;
+					successful = true;
+				}
+		if (successful)
+			for (Car car : cars)
+				if ((jFor == 0 && car.j1 < 5) || (jFor == 9 && car.j1 > 8))
+					car.elevate(car.i1 + (iDragged - i));
 
-			System.out.println("true");
-			return true;
-		} else {
-			System.out.println("Out of Bounds Exception");
-			return false;
-		}
+		System.out.println("true");
+		return successful;
 	}
 
 	public boolean getWin() {

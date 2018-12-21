@@ -46,7 +46,7 @@ public class MultiGameEngine extends GameEngine {
 		if ((i >= 0 && i < 22 && iDragged >= 0 && iDragged < 22)) {
 			if (shift && ((j >= 0 && j < 5) || (j >= 9 && j < 14)) && board.coordinates[i][j] == 3 && i != iDragged) { // if shift is enabled
 				shift = !board.moveBoard(i, j, iDragged);
-				System.out.println("shifted");
+				System.out.println("axaxa");
 				// gameScreen.repaint();
 			} else if (board.coordinates[i][j] < 3) {
 				if (numberOfMoves == -1) { // if it's 1x
@@ -72,9 +72,8 @@ public class MultiGameEngine extends GameEngine {
 			}
 		}
 
-		if (!shift && numberOfMoves == 0) {
+		if (!shift && numberOfMoves == 0) 
 			turnSwap();
-		}
 		return true;
 	}
 
@@ -84,17 +83,6 @@ public class MultiGameEngine extends GameEngine {
 			cards = cards1;
 		else
 			cards = cards2;
-		// gameScreen.repaint();
-		System.out.println("Your Cards:");
-		for (int i = 0; i < 4; i++)
-			System.out.println(i + ". " + cards[i].shift + "\t" + cards[i].numberOfMoves);
-
-		System.out.println("Please enter the number of the card you wanna play");
-		// choice = scan.nextInt();
-		//
-		// numberOfMoves = cards[choice].numberOfMoves;
-		// shift = cards[choice].shift;
-		System.out.println("sdfsdfs");
 		for (int i = 0; i < 3; i++)
 			if (i >= choice) {
 				cards[i].shift = cards[i + 1].shift;

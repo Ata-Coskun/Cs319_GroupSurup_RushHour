@@ -12,6 +12,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,19 +28,40 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	Board board;
 
 	int numberOfMoves;
-    int levelNo;
+	int theme;
+	int levelNo;
 	boolean x;
 	boolean win;
+	boolean mute;
+	public Clip myClip;
 	MultiGameEngine engine;
 	JButton[] cards;
 	JLabel text, p1, p2;
 	PrintWriter resumeWriter;
 	File resumeFile;
+
+	Image background;
+	Image rock;
+	Image boardImage;
+	Image redCar1;
+	Image redCar2;
+	Image car2;
+	Image car3;
+	Image carv2;
+	Image carv3;
+	JButton changeTheme;
+	JButton muteButton;
+	
+	File theme1file = new File("OffLimits.wav");
+	// File theme2file = new File("");
+	File theme3file = new File("Ankara.wav");
+
 	public MultiGameScreen(MultiGameEngine engine) throws FileNotFoundException {
 		this.engine = engine;
 		this.board = engine.board;
 		this.levelNo = engine.level;
-		System.out.println("multi engine level: " +  engine.level);
+		theme = 1;
+		System.out.println("multi engine level: " + engine.level);
 		setLayout(null);
 		cards = new JButton[8];
 		setLayout(null);
@@ -54,46 +80,73 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		cards[1].addActionListener(this);
 		cards[2].addActionListener(this);
 		cards[3].addActionListener(this);
+		
 		cards[4].addActionListener(this);
 		cards[5].addActionListener(this);
 		cards[6].addActionListener(this);
 		cards[7].addActionListener(this);
+
+		changeTheme = new JButton("CHANGE THEME");
+		changeTheme.addActionListener(this);
+		changeTheme.setBackground(Color.yellow);
+		changeTheme.setForeground(Color.red);
+		changeTheme.setBounds(550, 450, 150, 50);
+		
+		muteButton = new JButton("MUTE");
+		muteButton.addActionListener(this);
+		muteButton.setBackground(Color.yellow);
+		muteButton.setForeground(Color.red);
+		muteButton.setBounds(550, 600, 150, 50);
+
+		p1 = new JLabel();
+		p1.setBounds(450, 15, 200, 30);
+		p1.setText("Player 1's Cards");
+		p1.setForeground(Color.YELLOW);
+		text = new JLabel();
+		text.setBounds(450, 200, 400, 30);
+		text.setForeground(Color.YELLOW);
+		p2 = new JLabel();
+		p2.setBounds(450, 400, 200, 30);
+		p2.setText("Player 2's Cards");
+		p2.setForeground(Color.YELLOW);
 
 		cards[0].setBounds(450, 50, 100, 145);
 		cards[1].setBounds(550, 50, 100, 145);
 		cards[2].setBounds(650, 50, 100, 145);
 		cards[3].setBounds(750, 50, 100, 145);
 
-		p1 = new JLabel();
-		p1.setBounds(450, 15, 200, 30);
-		p1.setText("Player 1's Cards");
-		text = new JLabel();
-		text.setBounds(450, 200, 400, 30);
-		p2 = new JLabel();
-		p2.setBounds(450, 400, 200, 30);
-		p2.setText("Player 2's Cards");
-
 		cards[4].setBounds(450, 250, 100, 145);
 		cards[5].setBounds(550, 250, 100, 145);
 		cards[6].setBounds(650, 250, 100, 145);
 		cards[7].setBounds(750, 250, 100, 145);
 
+		
+		add(p1);
+		add(p2);
+		add(text);
+		
 		add(cards[0]);
 		add(cards[1]);
 		add(cards[2]);
 		add(cards[3]);
+		
 		add(cards[4]);
-		add(p1);
-		add(p2);
-		add(text);
 		add(cards[5]);
 		add(cards[6]);
 		add(cards[7]);
+		add(changeTheme);
+		add(muteButton);
 
-		setBackground(Color.white);
+		setBackground(Color.darkGray);
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		
+		mute = false;
+		if (theme == 1)
+			play(theme1file, mute);
+		if (theme == 2)
+			play(theme3file, mute);
+
 		resumeFile = new File("resume.txt");
 		System.out.println("multi level no:" + levelNo);
 		resumeWriter = new PrintWriter(resumeFile);
@@ -104,8 +157,29 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		Image boardBackGround = new ImageIcon("backGround.jpg").getImage();
-		g.drawImage(boardBackGround, 0, 0, 420, 660, this);
+		
+		if (theme == 1) {
+			rock = new ImageIcon("rock.png").getImage();
+			boardImage = new ImageIcon("backGround.jpg").getImage();
+			redCar1 = new ImageIcon("7.png").getImage();
+			redCar2 = new ImageIcon("9.png").getImage();
+			car2 = new ImageIcon("6.png").getImage();
+			car3 = new ImageIcon("4.png").getImage();
+			carv2 = new ImageIcon("10.png").getImage();
+			carv3 = new ImageIcon("2.png").getImage();
+		}
+		if (theme == 2) {
+			rock = new ImageIcon("meteor.png").getImage();
+			boardImage = new ImageIcon("uz.png").getImage();
+			redCar1 = new ImageIcon("14.png").getImage();
+			redCar2 = new ImageIcon("16.png").getImage();
+			car2 = new ImageIcon("13.png").getImage();
+			car3 = new ImageIcon("11.png").getImage();
+			carv2 = new ImageIcon("12.png").getImage();
+			carv3 = new ImageIcon("15.png").getImage();
+		}
+
+		g.drawImage(boardImage, 0, 0, 420, 660, this);
 
 		// ******Draw the board**********
 		for (int j = 0; j < 14; j++)
@@ -123,7 +197,6 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 			for (int j = 0; j < 14; j++) {
 
 				if (board.coordinates[i][j] == 2) {
-					Image rock = new ImageIcon("rock.png").getImage();
 					g.drawImage(rock, j * 30, i * 30, 30, 30, this);
 				}
 
@@ -132,19 +205,19 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 
 					if (tempt != null && !tempt.direction) {// horizontal
 
-						if (tempt.carType != 0) {// if car is red
-							Image car = new ImageIcon("7.png").getImage();
-							g.drawImage(car, j * 30, i * 30, 60, 30, this);
+						if (tempt.carType == 1) {// if car is red
+							g.drawImage(redCar1, j * 30, i * 30, 60, 30, this);
 							j++;
 						}
-
+						else if (tempt.carType == 2) {// if car is red
+							g.drawImage(redCar2, j * 30, i * 30, 60, 30, this);
+							j++;
+						}
 						else if (tempt.size == 2) {// if car is size 2 // 2
-							Image car = new ImageIcon("6.png").getImage();
-							g.drawImage(car, j * 30, i * 30, 60, 30, this);
+							g.drawImage(car2, j * 30, i * 30, 60, 30, this);
 							j++;
 						} else if (tempt.size == 3) {// if car is size 3
-							Image car = new ImageIcon("4.png").getImage();
-							g.drawImage(car, j * 30, i * 30, 90, 30, this);
+							g.drawImage(car3, j * 30, i * 30, 90, 30, this);
 							j += 2;
 						}
 					}
@@ -158,12 +231,10 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 					Car tempt = board.searchCoordinates(i, j);
 					if (tempt != null && tempt.direction)
 						if (tempt.size == 2) {// if car is vertical & size 2
-							Image car = new ImageIcon("10.png").getImage();
-							g.drawImage(car, j * 30, i * 30, 30, 60, this);
+							g.drawImage(carv2, j * 30, i * 30, 30, 60, this);
 							i++;
 						} else if (tempt.size == 3) {// if car is vertical & size 3
-							Image car = new ImageIcon("10.png").getImage();
-							g.drawImage(car, j * 30, i * 30, 30, 90, this);
+							g.drawImage(carv3, j * 30, i * 30, 30, 90, this);
 							i += 2;
 						}
 				}
@@ -189,13 +260,10 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		else if (!engine.turn && !(engine.shift || engine.numberOfMoves != 0))
 			text.setText("Player 2's turn to pick a card");
 
-		if (x) {
-			g.setColor(Color.MAGENTA);
+		if (x && engine.shift) {
+			g.setColor(Color.CYAN);
 			for (int i = 1; i < 22; i++)
 				g.drawLine(0, 30 * i, 420, 30 * i);
-			g.setColor(Color.CYAN);
-			for (int i = 1; i < 14; i++)
-				g.drawLine(30 * i, 0, 30 * i, 660);
 		}
 
 		repaint();
@@ -205,6 +273,39 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+		if (e.getSource() == changeTheme) {
+			theme = (theme % 2) + 1;
+			if (theme == 1) {
+				mute = false;
+				myClip.stop();
+				play(theme1file, mute);
+				return;
+			}
+			if (theme == 2) {
+				mute = false;
+				myClip.stop();
+				play(theme3file, mute);
+				return;
+			}
+
+		}
+		
+		if (e.getSource() == muteButton) {
+
+			if (mute && theme == 1) {
+				mute = false;
+				play(theme1file, mute);
+				return;
+			} else if (mute && theme == 2) {
+				mute = false;
+				play(theme3file, mute);
+				return;
+			} else {
+				mute = true;
+				myClip.stop();
+				return;
+			}
+		}
 		if (engine.numberOfMoves == 0 && !engine.shift)
 			if (engine.turn) {
 				if (e.getSource() == cards[0]) {
@@ -255,6 +356,7 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 					engine.choice = 3;
 				}
 			}
+				
 	}
 
 	@Override
@@ -301,5 +403,30 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	@Override
 	public void mouseExited(MouseEvent e) {
 	}
+	
+	public void play(File file, Boolean mute) {
+		try {
+			// final Clip
+			myClip = (Clip) AudioSystem.getLine(new Line.Info(Clip.class));
+			// myClip = clip;
+
+			myClip.addLineListener(new LineListener() {
+				@Override
+				public void update(LineEvent event) {
+					if (event.getType() == LineEvent.Type.STOP)
+						myClip.close();
+				}
+			});
+
+			myClip.open(AudioSystem.getAudioInputStream(file));
+			myClip.start();
+			if (mute == true)
+				myClip.stop();
+		} catch (Exception exc) {
+			exc.printStackTrace(System.out);
+		}
+
+	}
+
 
 }

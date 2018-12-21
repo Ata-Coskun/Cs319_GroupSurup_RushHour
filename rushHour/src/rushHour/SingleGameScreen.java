@@ -15,7 +15,6 @@ import java.io.PrintWriter;
 import java.io.*;
 import java.util.Scanner;
 import java.util.Stack;
-import java.util.Timer;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -27,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class SingleGameScreen extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
 
@@ -40,12 +40,12 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	int highScore; // high score
 	boolean x;
 	boolean win;
-	Timer myTimer = new Timer();
+	Timer myTimer;
 	public Clip myClip;
 	boolean mute;
 	File theme1file = new File("OffLimits.wav");
-	//File theme2file = new File("");
-	File theme3file = new File("Ankara.mp3");
+	// File theme2file = new File("");
+	File theme3file = new File("Ankara.wav");
 	Stack<Integer> Q;
 	int endGame;
 	int theme;
@@ -55,12 +55,17 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	JButton changeTheme;
 	JButton hintButton;
 	JButton replayButton;
+
 	JLabel NOfMoves;
+	JLabel tmLabel;
+
 	File scoreFile;
 	File resumeFile;
+
 	PrintWriter writer;
 	PrintWriter resumeWriter;
 	PrintWriter winWriter;
+
 	Image rock;
 	Image boardImage;
 	Image redCar;
@@ -68,13 +73,15 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 	Image car3;
 	Image carv2;
 	Image carv3;
+	Image redCarv;
+
 	BufferedImage background;
 	String scoreDatas; // it is our dataset for high scores
 	// int timeCounter;
 
 	public SingleGameScreen(SingleGameEngine engine, int theme, Stack<Integer> Q) throws IOException {
 		time = 0;
-
+		
 		System.out.println(Q.size());
 		this.theme = theme;
 		endGame = -15;
@@ -83,60 +90,86 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		this.board = engine.board;
 		this.Q = Q;
 		this.levelNo = engine.level;
-		// System.out.println("engine level: "+ engine.level);
-		// time = 10;
 
-		setBackground(Color.white);
+		tmLabel = new JLabel();
+		tmLabel.setBounds(555, 20, 100, 30);
+		tmLabel.setForeground(Color.cyan);
+
+		setBackground(Color.BLACK);
+		/*
+		double a = Math.random();
+		if(a < 0.33)
+			setBackground(Color.magenta);
+		else if(a < 0.66)
+			setBackground(Color.cyan);
+		else 
+			setBackground(Color.pink);*/
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setLayout(null);
-		
+
 		undoButton = new JButton("UNDO");
 		muteButton = new JButton("MUTE");
 		changeTheme = new JButton("CHANGE THEME");
 		hintButton = new JButton("HINT");
 		replayButton = new JButton("REPLAY");
 		NOfMoves = new JLabel();
-		
+
 		undoButton.setBackground(Color.yellow);
 		undoButton.setForeground(Color.red);
 		undoButton.addActionListener(this);
 		undoButton.setBounds(525, 50, 100, 50);
-		
+
 		replayButton.setBackground(Color.yellow);
 		replayButton.setForeground(Color.red);
 		replayButton.addActionListener(this);
 		replayButton.setBounds(525, 110, 100, 50);
-	
+
 		hintButton.setBackground(Color.yellow);
 		hintButton.setForeground(Color.red);
 		hintButton.addActionListener(this);
 		hintButton.setBounds(525, 170, 100, 50);
-		
+
 		muteButton.addActionListener(this);
 		muteButton.setBackground(Color.yellow);
 		muteButton.setForeground(Color.red);
 		muteButton.setBounds(525, 230, 100, 50);
-		
+
 		changeTheme.addActionListener(this);
 		changeTheme.setBackground(Color.yellow);
 		changeTheme.setForeground(Color.red);
 		changeTheme.setBounds(500, 290, 150, 50);
-		
-		NOfMoves.setBounds(550, 5, 150, 15);
-		
+
+		NOfMoves.setBounds(520, 5, 150, 15);
+		NOfMoves.setForeground(Color.YELLOW);
+
 		add(undoButton);
 		add(replayButton);
 		add(hintButton);
 		add(muteButton);
 		add(changeTheme);
 		add(NOfMoves);
-		
+		add(tmLabel);
+
+		myTimer = new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				time++;
+				if (time < 100000) {
+					tmLabel.setText("Time: " + Integer.toString(time));
+				} else {
+					((Timer) (e.getSource())).stop();
+				}
+			}
+		});
+		myTimer.setInitialDelay(0);
+		myTimer.start();
+
 		mute = false;
-		if(theme == 1)
-		play(theme1file, mute);
-		if(theme == 2)
-	    play(theme1file,mute);
+		if (theme == 1)
+			play(theme1file, mute);
+		if (theme == 2)
+			play(theme3file, mute);
 
 		scoreFile = new File("high_score.txt");
 		resumeFile = new File("resume.txt");
@@ -176,69 +209,69 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 
 	public void writeFile(boolean high, int highscore) throws IOException {
 
-		
-		if(high == false) {
-		   writer.println(scoreDatas);
-		   writer.close();
-		}
-	    else {
-		String score = scoreDatas.charAt(0) + "";
-		String temp1;
-		String temp2;
-		int i = 0;
-		int counter = 0;
-		int charCounter = 0;
-		while (counter != levelNo) {
-			if (scoreDatas.charAt(i) == ',')
-				counter++;
-			if (counter == levelNo - 1)
-				charCounter++;
-			i++;
-		}
-		if (counter > 1)
-			charCounter--;
+		if (high == false) {
+			writer.println(scoreDatas);
+			writer.close();
+		} else {
+			String score = scoreDatas.charAt(0) + "";
+			String temp1;
+			String temp2;
+			int i = 0;
+			int counter = 0;
+			int charCounter = 0;
+			while (counter != levelNo) {
+				if (scoreDatas.charAt(i) == ',')
+					counter++;
+				if (counter == levelNo - 1)
+					charCounter++;
+				i++;
+			}
+			if (counter > 1)
+				charCounter--;
 
-		temp1 = scoreDatas.substring(0, i - 1 - charCounter);
-		temp2 = scoreDatas.substring(i - 1, scoreDatas.length());
-		temp1 += highscore;
+			temp1 = scoreDatas.substring(0, i - 1 - charCounter);
+			temp2 = scoreDatas.substring(i - 1, scoreDatas.length());
+			temp1 += highscore;
 
-		winWriter.println(temp1 + temp2);
-		winWriter.close();
+			winWriter.println(temp1 + temp2);
+			winWriter.close();
 		}
 
 	}
 
 	public void checkWin() throws IOException {
-		if (win) {
-			System.out.println("End score: "+engine.calculateScore(time, numberOfMoves));
-			if (engine.calculateScore(time, numberOfMoves)+1 > highScore) // new score is highest
-				writeFile(true, engine.calculateScore(time, numberOfMoves)+1); // update file
-			Object[] options = { "Turn back to main", "Next Level", "EXIT" };
-			endGame = JOptionPane.showOptionDialog(null, options,
-					"WIN!\nYou finished in " + numberOfMoves + " number of moves", JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
-			System.out.println(endGame);
+		myTimer.stop();
+		System.out.println("End Game Time: " + time);
+		System.out.println("End score: " + engine.calculateScore(time, numberOfMoves));
+		if (100*engine.calculateScore(time, numberOfMoves)> highScore)  // new score is highest
+			writeFile(true, 100*engine.calculateScore(time, numberOfMoves));
+		
+		Object[] options = { "Turn back to main", "Next Level", "EXIT" };
+		endGame = JOptionPane.showOptionDialog(null, options,
+				"WIN!\nYou finished in " + numberOfMoves + " number of moves", JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+		System.out.println(endGame);
 
-			myClip.stop();
-			if (endGame == 0) {
-				this.setVisible(false);
-				try {
-					new MainScreen(theme, mute);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		
+		myClip.stop();
+		if (endGame == 0) {
+			this.setVisible(false);
+			try {
+				new MainScreen(theme, mute);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (endGame == 1) {
-				this.setVisible(false);
-				new DisplayLevelScreen(2);
-			}
-			if (endGame == 2) {
-				this.setVisible(false);
-				System.exit(0);
-			}
-			return;
 		}
+		if (endGame == 1) {
+			this.setVisible(false);
+			new DisplayLevelScreen(levelNo + 1);
+		}
+		if (endGame == 2) {
+			this.setVisible(false);
+			System.exit(0);
+		}
+		return;
 	}
 
 	@Override
@@ -254,6 +287,7 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 			car3 = new ImageIcon("4.png").getImage();
 			carv2 = new ImageIcon("10.png").getImage();
 			carv3 = new ImageIcon("2.png").getImage();
+			redCarv = new ImageIcon("17.png").getImage();
 		}
 		if (theme == 2) {
 			rock = new ImageIcon("meteor.png").getImage();
@@ -263,27 +297,9 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 			car3 = new ImageIcon("11.png").getImage();
 			carv2 = new ImageIcon("12.png").getImage();
 			carv3 = new ImageIcon("15.png").getImage();
+			redCarv = new ImageIcon("17.png").getImage();
 		}
 		g.drawImage(boardImage, 0, 0, 450, 450, this);
-
-		JLabel tmLabel = new JLabel();
-		tmLabel.setText("Time : " + Integer.toString(time));
-		tmLabel.setBounds(550, 20, 100, 30);
-		time++;
-
-		/*
-		 * TimerTask task = new TimerTask() { public void run() {
-		 * 
-		 * } }; //myTimer.schedule(task, 0, 1000);
-		 */
-		add(tmLabel);
-
-		try {
-			checkWin();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		for (int i = 0; i < 6; i++)
 			for (int j = 0; j < 6; j++)
@@ -298,12 +314,12 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 					if (tempt != null && !tempt.direction) {
 
 						if (tempt.carType != 0) {// if car is red
-							if (tempt.j2 == 5)
-								win = true;
 							g.drawImage(redCar, j * 75, i * 75, 150, 75, this);
 							j++;
-							g.setColor(Color.red);
-							g.fillRect(425, i * 75, 25, 75);
+							if (board.portals == null) {
+								Image exitv = new ImageIcon("exitv.png").getImage();
+								g.drawImage(exitv, 450, i * 75, 25, 75, this);
+							}
 						}
 
 						else if (tempt.size == 2) {// if car is size 2 // 2
@@ -318,28 +334,32 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 
 		for (int i = 0; i < 6; i++)
 			for (int j = 0; j < 6; j++)
-
 				if (board.coordinates[j][i] == 1) {
 					Car tempt = board.searchCoordinates(j, i);
 					if (tempt != null && tempt.direction)
-						if (tempt.size == 2) {// if car is vertical & size 2
+						if (tempt.carType != 0) {// if car is red
+							g.drawImage(redCarv, i * 75, j * 75, 75, 150, this);
+							j++;
+						} else if (tempt.size == 2) {// if car is vertical & size 2
 							g.drawImage(carv2, i * 75, j * 75, 75, 150, this);
 							j++;
 						} else if (tempt.size == 3) {// if car is vertical & size 3
 							g.drawImage(carv3, i * 75, j * 75, 75, 225, this);
 							j += 2;
 						}
+
 				}
 		
+		if (board.portals != null) {
+			Image portal = new ImageIcon("Portal.png").getImage();
+			g.drawImage(portal, 425, board.portals.i1 * 75, 25, 75, this);
+			g.drawImage(portal, board.portals.j2 * 75, 0, 75, 25, this);
+			Image exith = new ImageIcon("exith.png").getImage();
+			g.drawImage(exith, board.portals.j2 * 75, 425, 75, 25, this);
+		}
 
 		NOfMoves.setText("Number of moves: " + numberOfMoves);
 		repaint();
-		/*
-		 * if(win) { this.setVisible(false); undoButton.setVisible(false);
-		 * muteButton.setVisible(false); myClip.stop();
-		 * JOptionPane.showMessageDialog(null, "WIN! \nYou finished in " + numberOfMoves
-		 * +" number of moves"); }
-		 */
 	}
 
 	@Override
@@ -353,39 +373,36 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 			while (levelNo == 2 && Q.size() > 24)
 				engine.update(Q.pop(), Q.pop(), Q.pop(), Q.pop());
 		else if (evt.getSource() == muteButton) {
-			
+
 			if (mute && theme == 1) {
 				mute = false;
 				play(theme1file, mute);
 				return;
-			}
-			else if(mute && theme == 2) {
-					mute = false;
-					play(theme1file, mute);
-					return;
-			}
-	    else {
+			} else if (mute && theme == 2) {
+				mute = false;
+				play(theme3file, mute);
+				return;
+			} else {
 				mute = true;
 				myClip.stop();
 				return;
-	       }
 			}
+		} 
 		else if (evt.getSource() == changeTheme) {
 			theme = (theme % 2) + 1;
-			if(theme == 1) {
-				mute =false;
+			if (theme == 1) {
+				mute = false;
 				myClip.stop();
 				play(theme1file, mute);
 				return;
 			}
-			if(theme == 2) {
-				mute =false;
+			if (theme == 2) {
+				mute = false;
 				myClip.stop();
 				play(theme3file, mute);
 				return;
 			}
-				
-				
+
 		}
 		repaint();
 	}
@@ -420,6 +437,13 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 				Q.push(iClicked);
 				Q.push(jDragged);
 				Q.push(iDragged);
+				if (board.win)
+					try {
+						checkWin();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 			}
 			x = false;
 		}

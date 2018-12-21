@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.Stack;
 
 import javax.imageio.ImageIO;
@@ -24,9 +25,13 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 	JButton btn2;
 	JFrame f;
 	Board board;
+	File scoreFile;
+	String scoreDatas;
+	int highScore;
 	public DisplayLevelScreen(boolean gameMode) throws IOException {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
+		scoreFile = new File("high_score.txt");
 		if (gameMode) {
 			board = new Board(true);
 			startMultiLevel(5);
@@ -46,10 +51,10 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 			btn2.setIcon(new ImageIcon(img3));
 			// texts
 
-			JLabel label1 = new JLabel("Level 1 Score: 100 ");
+			JLabel label1 = new JLabel("Level 1 Score: " + readFile(1));
 			label1.setBounds(400, 50, 300, 300);
 			label1.setFont(new Font("Serif", Font.PLAIN, 25));
-			JLabel label2 = new JLabel("Level 2 Score:  ");
+			JLabel label2 = new JLabel("Level 2 Score:  " + readFile(2));
 			label2.setBounds(400, 350, 300, 300);
 			label2.setFont(new Font("Serif", Font.PLAIN, 25));
 			// score star image example
@@ -81,6 +86,8 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 			f.setSize(700, 700);
 			f.setVisible(true);
 			f.setLocationRelativeTo(null);
+			
+			
 		}
 		// LevelSelection selection = new LevelSelection(1);
 	}
@@ -88,13 +95,37 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 	public DisplayLevelScreen(int level) throws IOException {
 		if (level <= 4) { // it is single level
 			board = new Board(false);
-		    startSingleLevel(level);
-		}
-		else {
+			startSingleLevel(level);
+		} else {
 			board = new Board(true);
 			startMultiLevel(level);
 		}
 	}
+	
+	public int readFile(int levelNo) throws IOException {
+		Scanner scanner = new Scanner(scoreFile);
+		scoreDatas = scanner.nextLine();
+		System.out.println("datas: " + scoreDatas);
+		String score = scoreDatas.charAt(0) + "";
+		int i = 0;
+		int counter = 0;
+		int charCounter = 0;
+		while (counter != levelNo) {
+			if (scoreDatas.charAt(i) == ',')
+				counter++;
+			if (counter == levelNo - 1)
+				charCounter++;
+			i++;
+		}
+		if (counter > 1)
+			charCounter--;
+		score = scoreDatas.substring(i - 1 - charCounter, i - 1);
+		highScore = Integer.valueOf(score);
+		System.out.println("High score: " + highScore);
+		scanner.close();
+		return highScore;
+	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -143,7 +174,7 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 			board.setObstacle(1, 5);
 
 			singleEngine = new SingleGameEngine(board, 1, Q);
-		} else {
+		} else if (level == 2) {
 			board.setCar(0, 0, 0, 1, 0);
 			board.setCar(0, 1, 2, 2, 0);
 			board.setCar(0, 1, 3, 3, 0);
@@ -154,6 +185,8 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 			board.setCar(1, 2, 5, 5, 0);
 			board.setCar(2, 4, 1, 1, 0);
 			board.setCar(5, 5, 3, 5, 0);
+			board.setCar(5, 5, 0, 1, 0);
+			board.setPortal(1, 0, 5, 0);
 			board.setObstacle(4, 2);
 
 			Q.push(5);
@@ -187,38 +220,82 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 			Q.push(2);
 
 			singleEngine = new SingleGameEngine(board, 2, Q);
+		} else {
+			board.setCar(0, 0, 0, 1, 0);
+			board.setCar(0, 1, 2, 2, 0);
+			board.setCar(0, 1, 3, 3, 0);
+			board.setCar(0, 0, 4, 5, 0);
+			board.setCar(1, 1, 0, 1, 1);
+			board.setCar(2, 2, 2, 3, 0);
+			board.setCar(1, 2, 4, 4, 0);
+			board.setCar(1, 2, 5, 5, 0);
+			board.setCar(2, 4, 1, 1, 0);
+			board.setCar(5, 5, 3, 5, 0);
+			board.setCar(5, 5, 0, 1, 0);
+			board.setObstacle(4, 2);
+
+			Q.push(5);
+			Q.push(1);
+			Q.push(1);
+			Q.push(1);
+
+			Q.push(2);
+			Q.push(3);
+			Q.push(2);
+			Q.push(1);
+
+			Q.push(3);
+			Q.push(4);
+			Q.push(3);
+			Q.push(1);
+
+			Q.push(4);
+			Q.push(2);
+			Q.push(2);
+			Q.push(2);
+
+			Q.push(4);
+			Q.push(4);
+			Q.push(4);
+			Q.push(2);
+
+			Q.push(5);
+			Q.push(4);
+			Q.push(5);
+			Q.push(2);
+
+			singleEngine = new SingleGameEngine(board, 3, Q);
 		}
 
-		JFrame f1 = new JFrame("Single Rush Hour");
-		f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f1.add(singleEngine.gameScreen);
-		f1.setSize(700, 485);
-		f1.setVisible(true);
-		f1.setLocationRelativeTo(null);
+		f = new JFrame("Single Rush Hour");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.add(singleEngine.gameScreen);
+		f.setSize(700, 485);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
 	}
 
 	public void startMultiLevel(int level) throws FileNotFoundException {
-		if(level == 5) {
-		board.setCar(9, 9, 0, 1, 1);
-		board.setCar(9, 11, 3, 3, 0);
-		board.setCar(8, 9, 4, 4, 0);
-		board.setCar(12, 13, 4, 4, 0);
-		board.setCar(10, 11, 5, 5, 0);
-		board.setObstacle(10, 6);
-		board.setObstacle(10, 7);
-		board.setObstacle(11, 6);
-		board.setObstacle(11, 7);
-		board.setCar(10, 11, 8, 8, 0);
-		board.setCar(8, 9, 9, 9, 0);
-		board.setCar(12, 13, 9, 9, 0);
-		board.setCar(10, 12, 10, 10, 0);
-		board.setCar(12, 12, 12, 13, 2);
-		}
-		else { // add new level as an 6th level. 1-2-3-4 are single level don't change it.
-		
+		if (level == 5) {
+			board.setCar(9, 9, 0, 1, 1);
+			board.setCar(9, 11, 3, 3, 0);
+			board.setCar(8, 9, 4, 4, 0);
+			board.setCar(12, 13, 4, 4, 0);
+			board.setCar(10, 11, 5, 5, 0);
+			board.setObstacle(10, 6);
+			board.setObstacle(10, 7);
+			board.setObstacle(11, 6);
+			board.setObstacle(11, 7);
+			board.setCar(10, 11, 8, 8, 0);
+			board.setCar(8, 9, 9, 9, 0);
+			board.setCar(12, 13, 9, 9, 0);
+			board.setCar(10, 12, 10, 10, 0);
+			board.setCar(12, 12, 12, 13, 2);
+		} else { // add new level as an 6th level. 1-2-3-4 are single level don't change it.
+
 		}
 
-		MultiGameEngine multiEngine = new MultiGameEngine(board,level);
+		MultiGameEngine multiEngine = new MultiGameEngine(board, level);
 		f = new JFrame("Multi Rush Hour");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.add(multiEngine.gameScreen);

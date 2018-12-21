@@ -19,7 +19,7 @@ public class SingleGameEngine extends GameEngine {
 		return board.moveCar(iPressed,jPressed,iReleased,jReleased, true);
 	}
 	public int calculateScore(int time, int numOfMoves){
-		return  1 / (time * numOfMoves) * 100*level;
+		return  (100 / (time * numOfMoves) )* 100;
 	}
 	
 	

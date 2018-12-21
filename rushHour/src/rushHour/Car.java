@@ -38,18 +38,21 @@ public class Car {
 	}
 
 	public void setCoordinates(int iDragged, int jDragged) {
+		i1 = iDragged;
+		j1 = jDragged;
 		if (direction) {
-			i1 = iDragged;
 			i2 = i1 + size - 1;
+			j2 = j1;
 		} else {
-			j1 = jDragged;
 			j2 = j1 + size - 1;
+			i2 = i1;
 		}
+
 	}
-	
+
 	public void elevate(int i) {
 		i1 = i;
-		if(direction)
+		if (direction)
 			i2 = i1 + size - 1;
 		else
 			i2 = i1;
