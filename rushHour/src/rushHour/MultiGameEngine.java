@@ -1,6 +1,7 @@
 package rushHour;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -20,7 +21,7 @@ public class MultiGameEngine extends GameEngine {
 	public MultiGameEngine() {
 	}
 
-	public MultiGameEngine(Board board,int level) throws FileNotFoundException {
+	public MultiGameEngine(Board board,int level) throws IOException {
 		this.board = board;
 		turn = false;
 		this.level = level;

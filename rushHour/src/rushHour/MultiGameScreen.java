@@ -10,7 +10,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -26,7 +28,7 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	static int iDragged = 0, jDragged = 0;
 	static int iClicked = 0, jClicked = 0;
 	Board board;
-
+	String settingsDatas;
 	int numberOfMoves;
 	int theme;
 	int levelNo;
@@ -39,7 +41,8 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	JLabel text, p1, p2;
 	PrintWriter resumeWriter;
 	File resumeFile;
-
+	File settingsFile;
+	
 	Image background;
 	Image rock;
 	Image boardImage;
@@ -51,16 +54,15 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 	Image carv3;
 	JButton changeTheme;
 	JButton muteButton;
-	
+	PrintWriter settingsWriter;
 	File theme1file = new File("OffLimits.wav");
 	// File theme2file = new File("");
 	File theme3file = new File("Ankara.wav");
 
-	public MultiGameScreen(MultiGameEngine engine) throws FileNotFoundException {
+	public MultiGameScreen(MultiGameEngine engine) throws IOException {
 		this.engine = engine;
 		this.board = engine.board;
 		this.levelNo = engine.level;
-		theme = 1;
 		System.out.println("multi engine level: " + engine.level);
 		setLayout(null);
 		cards = new JButton[8];
@@ -141,19 +143,55 @@ public class MultiGameScreen extends JPanel implements MouseListener, MouseMotio
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		
-		mute = false;
 		if (theme == 1)
 			play(theme1file, mute);
 		if (theme == 2)
 			play(theme3file, mute);
 
 		resumeFile = new File("resume.txt");
+		settingsFile = new File("settings.txt");
+		theme = readFile(1);
+		readFile(2);
+		
 		System.out.println("multi level no:" + levelNo);
 		resumeWriter = new PrintWriter(resumeFile);
 		resumeWriter.println(levelNo + "");
 		resumeWriter.close();
+		
+		settingsWriter = new PrintWriter(settingsFile);
+		settingsWriter.println("1,0,");
+		settingsWriter.close();
 	}
-
+	
+	
+	public int readFile(int readType) throws IOException {		
+			Scanner scanner = new Scanner(settingsFile);
+			settingsDatas = scanner.nextLine();
+			System.out.println("settingDatas: " + settingsDatas);
+			String score = settingsDatas.charAt(0) + "";
+			int i = 0;
+			int counter = 0;
+			int charCounter = 0;
+			int result;
+			while (counter != readType) {
+				if (settingsDatas.charAt(i) == ',')
+					counter++;
+				if (counter == readType - 1)
+					charCounter++;
+				i++;
+			}
+			if (counter > 1)
+				charCounter--;
+			score = settingsDatas.substring(i - 1 - charCounter, i - 1);
+			result = Integer.valueOf(score);
+			scanner.close();
+			if(readType == 2 && result == 1)
+				mute = true;
+			else
+				mute = false;
+			return result;
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

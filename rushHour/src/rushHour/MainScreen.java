@@ -32,7 +32,7 @@ public class MainScreen implements ActionListener {
 	JFrame f3;
 	FileReader reader;
 
-	public MainScreen(int theme, boolean sound) throws IOException {
+	public MainScreen() throws IOException {
 		// initiliaze
 		getHelpBtn = new JButton();
 		// game = new RushHour();

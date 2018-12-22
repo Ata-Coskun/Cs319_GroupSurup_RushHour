@@ -61,10 +61,12 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 
 	File scoreFile;
 	File resumeFile;
-
+	File settingsFile;
+	
 	PrintWriter writer;
 	PrintWriter resumeWriter;
 	PrintWriter winWriter;
+	PrintWriter settingsWriter;
 
 	Image rock;
 	Image boardImage;
@@ -77,13 +79,14 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 
 	BufferedImage background;
 	String scoreDatas; // it is our dataset for high scores
+	String settingsDatas;
 	// int timeCounter;
 
-	public SingleGameScreen(SingleGameEngine engine, int theme, Stack<Integer> Q) throws IOException {
+	public SingleGameScreen(SingleGameEngine engine, Stack<Integer> Q) throws IOException {
 		time = 0;
 		
 		System.out.println(Q.size());
-		this.theme = theme;
+		//this.theme = theme;
 		endGame = -15;
 		numberOfMoves = 0;
 		this.engine = engine;
@@ -165,16 +168,20 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		myTimer.setInitialDelay(0);
 		myTimer.start();
 
-		mute = false;
+
+		scoreFile = new File("high_score.txt");
+		resumeFile = new File("resume.txt");
+		settingsFile = new File("settings.txt");
+		readFile(1,levelNo); // get the high score from file
+		theme = readFile(0,1);
+		System.out.println("Tema ne ? " + theme);
+		readFile(0,2);
+		
+		//mute = false;
 		if (theme == 1)
 			play(theme1file, mute);
 		if (theme == 2)
 			play(theme3file, mute);
-
-		scoreFile = new File("high_score.txt");
-		resumeFile = new File("resume.txt");
-		readFile(); // get the high score from file
-
 		// BufferedWriter out = new BufferedWriter(new FileWriter(scoreFile));
 		writer = new PrintWriter(scoreFile);
 		winWriter = new PrintWriter(scoreFile);
@@ -182,9 +189,14 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		resumeWriter = new PrintWriter(resumeFile);
 		resumeWriter.println(levelNo + "");
 		resumeWriter.close();
+		
+		settingsWriter = new PrintWriter(settingsFile);
+		settingsWriter.println("1,0,");
+		settingsWriter.close();
 	}
 
-	public void readFile() throws IOException {
+	public int readFile(int readType,int levelNo) throws IOException {
+		if(readType == 1) {
 		Scanner scanner = new Scanner(scoreFile);
 		scoreDatas = scanner.nextLine();
 		System.out.println("datas: " + scoreDatas);
@@ -203,8 +215,36 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 			charCounter--;
 		score = scoreDatas.substring(i - 1 - charCounter, i - 1);
 		highScore = Integer.valueOf(score);
-		System.out.println("High score: " + highScore);
 		scanner.close();
+		return highScore;
+		}
+		else{
+			Scanner scanner = new Scanner(settingsFile);
+			settingsDatas = scanner.nextLine();
+			System.out.println("settingDatas: " + settingsDatas);
+			String score = settingsDatas.charAt(0) + "";
+			int i = 0;
+			int counter = 0;
+			int charCounter = 0;
+			int result;
+			while (counter != levelNo) {
+				if (settingsDatas.charAt(i) == ',')
+					counter++;
+				if (counter == levelNo - 1)
+					charCounter++;
+				i++;
+			}
+			if (counter > 1)
+				charCounter--;
+			score = settingsDatas.substring(i - 1 - charCounter, i - 1);
+			result = Integer.valueOf(score);
+			scanner.close();
+			if(levelNo == 2 && result == 1)
+				mute = true;
+			else
+				mute = false;
+			return result;
+		}
 	}
 
 	public void writeFile(boolean high, int highscore) throws IOException {
@@ -257,7 +297,7 @@ public class SingleGameScreen extends JPanel implements MouseListener, MouseMoti
 		if (endGame == 0) {
 			this.setVisible(false);
 			try {
-				new MainScreen(theme, mute);
+				new MainScreen();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

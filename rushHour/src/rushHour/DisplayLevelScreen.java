@@ -264,7 +264,7 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 			Q.push(5);
 			Q.push(2);
 
-			singleEngine = new SingleGameEngine(board, 3, Q);
+			singleEngine = new SingleGameEngine(board,3,Q);
 		}
 
 		f = new JFrame("Single Rush Hour");
@@ -275,7 +275,7 @@ public class DisplayLevelScreen extends JPanel implements ActionListener {
 		f.setLocationRelativeTo(null);
 	}
 
-	public void startMultiLevel(int level) throws FileNotFoundException {
+	public void startMultiLevel(int level) throws IOException {
 		if (level == 5) {
 			board.setCar(9, 9, 0, 1, 1);
 			board.setCar(9, 11, 3, 3, 0);

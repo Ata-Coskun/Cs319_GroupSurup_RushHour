@@ -11,7 +11,7 @@ public class SingleGameEngine extends GameEngine {
 	public SingleGameEngine(Board board,int level, Stack Q) throws IOException{
 		this.board = board;
 		this.level = level;
-		gameScreen = new SingleGameScreen(this, 1, Q);
+		gameScreen = new SingleGameScreen(this,Q);
 	}
 	
 	//@Override 

@@ -13,7 +13,7 @@ public class RushHour{
 	MainScreen screen;
 	
 	public RushHour() throws IOException {
-		screen = new MainScreen(1,false);
+		screen = new MainScreen();
 	}
 
 public static void main(String[] args) throws IOException {
