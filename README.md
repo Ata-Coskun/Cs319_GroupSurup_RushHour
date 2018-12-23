@@ -9,9 +9,8 @@ Members of Group Surup:
 4. Asuman Aydın- 21502604
 5. Tarık Emin Kaplan- 21601737
 
-Link for Trailer: https://www.youtube.com/watch?v=AMtTEIropKI&t=54s
-
-Link for Game Play: https://www.youtube.com/watch?v=mxDJ4eq_nuA&t=45s
+Link for Trailer: https://youtu.be/p8E1FD6lxj4
+Link for Game Play: https://www.youtube.com/watch?v=mxDJ4eq_nuA&t
 
 Link for the actual board game: https://www.youtube.com/watch?v=SoOeCDczNzA
 
