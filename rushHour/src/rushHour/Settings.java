@@ -1,14 +1,19 @@
+/*
+*	Author : Ata Coþkun, Zeynep Nur Öztürk, Asuman Aydýn
+*/
+
 package rushHour;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -16,131 +21,136 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.io.PrintWriter;
-import java.io.File;
 
+/*
+ * This is the screen that comes when player chooses get help. Player can choose the initial theme and mute setting from here
+ */
 public class Settings extends JPanel implements ActionListener {
 
 	JButton okButton;
 	JButton muteButton;
-	JFrame f, f2;
-	JButton theme1, theme2,theme3;
-	PrintWriter settingsWriter;
-	File settingsFile;
+	JButton theme1, theme2, theme3;
+	JFrame f;
 	int theme;
 	int mute;
+
 	public Settings() throws IOException {
-		// initiliaze
-
+		// initiliazing the data
+		theme = 1;
+		mute = 0;
+		
+		// Frame of this scene
 		f = new JFrame("Settings");
-		theme1 = new JButton();
-		theme2 = new JButton();
-		theme3 = new JButton();
-		muteButton = new JButton();
-		okButton= new JButton();
-		// main panel
-		theme1.setVisible(true);
-		theme1.setBounds(200, 200, 300, 100);
-		theme1.setForeground(Color.red);
-		theme1.setBackground(Color.ORANGE);
-		theme1.addActionListener(this);
-
-		theme2.setVisible(true);
-		theme2.setBounds(200, 300, 300, 100);
-		theme2.setForeground(Color.red);
-		theme2.setBackground(Color.ORANGE);
-		theme2.addActionListener(this);
-		
-		theme3.setVisible(true);
-		theme3.setBounds(200, 400, 400, 100);
-		theme3.setForeground(Color.red);
-		theme3.setBackground(Color.ORANGE);
-		theme3.addActionListener(this);
-		
-		muteButton.setVisible(true);
-		muteButton.setBounds(200, 500, 300, 100);
-		muteButton.setForeground(Color.red);
-		muteButton.setBackground(Color.ORANGE);
-		muteButton.addActionListener(this);
-		
-		okButton.setVisible(true);
-		okButton.setBounds(200, 600, 300, 100);
-		okButton.setForeground(Color.red);
-		okButton.setBackground(Color.ORANGE);
-		okButton.addActionListener(this);
-
-
-		theme1.setText("Theme 1");
-		theme1.setFont(new Font("Serif", Font.ITALIC, 25));
-		theme2.setText("Theme 2");
-		theme2.setFont(new Font("Serif", Font.ITALIC, 25));
-		theme3.setText("Theme 3");
-		theme3.setFont(new Font("Serif", Font.ITALIC, 25));
-		
-		muteButton.setText("Mute ");
-		muteButton.setFont(new Font("Serif", Font.ITALIC, 25));
-		
-		okButton.setText("OK");
-		okButton.setFont(new Font("Serif", Font.ITALIC, 25));
-
-
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setLocationRelativeTo(null);
-		BufferedImage img = ImageIO.read(new File("background.png"));
-		f.setContentPane(new JLabel(new ImageIcon(img)));
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		f.add(theme1, gbc);
-		f.add(theme2, gbc);
-		f.add(theme3, gbc);
-		f.add(muteButton, gbc);
-		f.add(okButton, gbc);
-		settingsFile = new File("settings.txt");
-
-		// adding to the frame
+		f.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("background.png")))));
 		f.setSize(700, 700);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
-		mute = 0;
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+
+		// Initiazing buttons
+		theme1 = new JButton();
+		theme1.setVisible(true);
+		theme1.setBounds(225, 20, 150, 150);
+		theme1.setIcon(new ImageIcon(
+				new ImageIcon("level1.png").getImage().getScaledInstance(160, 150, Image.SCALE_DEFAULT)));
+		theme1.addActionListener(this);
+		f.add(theme1, gbc);
+
+
+		JLabel th1 = new JLabel();
+		th1.setText("Theme 1");
+		th1.setBounds(390, 50, 300, 100);
+		th1.setFont(new Font("Serif", Font.PLAIN, 25));
+		f.add(th1, gbc);
+		
+		theme2 = new JButton();
+		theme2.setVisible(true);
+		theme2.setBounds(225, 170, 150, 150);
+		theme2.setIcon(new ImageIcon(
+				new ImageIcon("uzaylý.png").getImage().getScaledInstance(160, 150, Image.SCALE_DEFAULT)));
+		theme2.addActionListener(this);
+		f.add(theme2, gbc);
+
+		JLabel th2 = new JLabel();
+		th2.setText("Theme 2");
+		th2.setBounds(390, 190, 300, 100);
+		th2.setFont(new Font("Serif", Font.PLAIN, 25));
+		f.add(th2, gbc);
+		
+		theme3 = new JButton();
+		theme3.setVisible(true);
+		theme3.setBounds(225, 320, 150, 150);
+		theme3.setBackground(Color.yellow);
+		theme3.setIcon(new ImageIcon(
+				new ImageIcon("ques.png").getImage().getScaledInstance(160, 150, Image.SCALE_DEFAULT)));
+		theme3.addActionListener(this);
+		f.add(theme3, gbc);
+
+		JLabel th3 = new JLabel();
+		th3.setText("Theme 3");
+		th3.setBounds(390, 330, 300, 100);
+		th3.setFont(new Font("Serif", Font.PLAIN, 25));
+		f.add(th3, gbc);
+		
+		muteButton = new JButton();
+		muteButton.setVisible(true);
+		muteButton.setBounds(225, 470, 150, 50);
+		muteButton.setBackground(Color.yellow);
+		if(mute == 1)
+			muteButton.setIcon(new ImageIcon(
+					new ImageIcon("muted.png").getImage().getScaledInstance(70, 50, Image.SCALE_DEFAULT)));
+		else 
+			muteButton.setIcon(new ImageIcon(
+					new ImageIcon("mute.png").getImage().getScaledInstance(70, 50, Image.SCALE_DEFAULT)));
+		
+		muteButton.addActionListener(this);
+		f.add(muteButton, gbc);
+
+		
+		okButton = new JButton();
+		okButton.setVisible(true);
+		okButton.setBounds(225, 520, 150, 50);
+		okButton.setForeground(Color.red);
+		okButton.setBackground(Color.ORANGE);
+		okButton.addActionListener(this);
+		okButton.setText("OK");
+		okButton.setFont(new Font("Serif", Font.ITALIC, 25));
+		f.add(okButton, gbc);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		if (evt.getSource() == okButton) {
+		// return button
+		if (evt.getSource() == okButton)
 			try {
 				f.setVisible(false);
-				settingsWriter = new PrintWriter(settingsFile);
-				System.out.println("yazÄ±lan data: " + theme+","+mute+",");
-				settingsWriter.println(theme+","+mute+",");
+				PrintWriter settingsWriter = new PrintWriter(new File("settings.txt"));
+				settingsWriter.println(theme + "," + mute + ",");
 				settingsWriter.close();
 				new MainScreen();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		else if (evt.getSource() == theme1) {
+		else if (evt.getSource() == theme1)
 			theme = 1;
-		}
-		else if (evt.getSource() == theme2) {
+		else if (evt.getSource() == theme2)
 			theme = 2;
-		}
-		else if (evt.getSource() == theme3) {
+		else if (evt.getSource() == theme3)
 			theme = 3;
-		}
 		else if (evt.getSource() == muteButton) {
-			if(mute == 0)
-				mute = 1;
+			mute = (mute + 1) % 2;
+			if(mute == 1)
+				muteButton.setIcon(new ImageIcon(
+						new ImageIcon("muted.png").getImage().getScaledInstance(70, 50, Image.SCALE_DEFAULT)));
 			else 
-				mute = 0;
+				muteButton.setIcon(new ImageIcon(
+						new ImageIcon("mute.png").getImage().getScaledInstance(70, 50, Image.SCALE_DEFAULT)));
+				
 		}
-		
-	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		this.setBackground(Color.pink);
 	}
 
 }

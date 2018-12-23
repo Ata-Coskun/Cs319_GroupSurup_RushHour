@@ -1,8 +1,15 @@
+/*
+*	Author : Ata Coþkun, Zeynep Nur Öztürk, Asuman Aydýn
+*/
+
 package rushHour;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,77 +20,81 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/*
+ * This is the screen that comes when player chooses play. Player chooses the game mode from here. Multi or single
+ */
 public class GameModeSelectionScreen extends JPanel implements ActionListener {
+
 	JButton singleMode;
 	JButton multiMode;
+	JButton returnMain;
 	JFrame f;
 
 	public GameModeSelectionScreen() throws IOException {
-		// initiliaze
-
+		// Frame of this scene
 		f = new JFrame("Game Mode");
-		multiMode = new JButton();
-		singleMode = new JButton();
-		// main panel
-		singleMode.setVisible(true);
-		singleMode.setBounds(225, 200, 250, 100);
-		singleMode.setForeground(Color.red);
-		singleMode.setBackground(Color.ORANGE);
-		singleMode.addActionListener(this);
-
-		multiMode.setVisible(true);
-		multiMode.setBounds(225, 350, 250, 100);
-		multiMode.setForeground(Color.red);
-		multiMode.setBackground(Color.ORANGE);
-		multiMode.addActionListener(this);
-
-		multiMode.setText("Multi-Player Mode");
-		multiMode.setFont(new Font("Serif", Font.ITALIC, 25));
-		singleMode.setText("Single-Player Mode");
-		singleMode.setFont(new Font("Serif", Font.ITALIC, 25));
-
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setLocationRelativeTo(null);
-		BufferedImage img = ImageIO.read(new File("background.png"));
-		f.setContentPane(new JLabel(new ImageIcon(img)));
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		f.add(singleMode, gbc);
-		f.add(multiMode, gbc);
-
-		// adding to the frame
+		f.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("background.png")))));
 		f.setSize(700, 700);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
 
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+
+		// Initiazing buttons
+		singleMode = new JButton();
+		singleMode.setVisible(true);
+		singleMode.setBounds(225, 100, 250, 100);
+		singleMode.setForeground(Color.red);
+		singleMode.setBackground(Color.ORANGE);
+		singleMode.addActionListener(this);
+		singleMode.setText("Single-Player Mode");
+		singleMode.setFont(new Font("Serif", Font.ITALIC, 25));
+		f.add(singleMode, gbc);
+
+		multiMode = new JButton();
+		multiMode.setVisible(true);
+		multiMode.setBounds(225, 250, 250, 100);
+		multiMode.setForeground(Color.red);
+		multiMode.setBackground(Color.ORANGE);
+		multiMode.addActionListener(this);
+		multiMode.setText("Multi-Player Mode");
+		multiMode.setFont(new Font("Serif", Font.ITALIC, 25));
+		f.add(multiMode, gbc);
+
+		returnMain = new JButton();
+		returnMain.setVisible(true);
+		returnMain.setBounds(225, 400, 250, 100);
+		returnMain.setForeground(Color.red);
+		returnMain.setBackground(Color.ORANGE);
+		returnMain.addActionListener(this);
+		returnMain.setText("Return");
+		returnMain.setFont(new Font("Serif", Font.ITALIC, 25));
+		f.add(returnMain, gbc);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		f.setVisible(false);
-		if (evt.getSource() == singleMode) {
+		if (evt.getSource() == singleMode)
 			try {
 				new DisplayLevelScreen(false);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		else if (evt.getSource() == multiMode) {
+		else if (evt.getSource() == multiMode)
 			try {
 				new DisplayLevelScreen(true);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		else if (evt.getSource() == returnMain)
+			try {
+				new MainScreen();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		this.setBackground(Color.pink);
-
-	}
-
 }

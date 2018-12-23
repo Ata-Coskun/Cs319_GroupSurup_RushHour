@@ -1,5 +1,14 @@
+/*
+*	Author : Muhammed Said Demir
+*/
+
 package rushHour;
 
+/*
+ * Card object. It holds information about the number of moves that a player can perform and shift operation.
+ * These attributes are assigned with a random generator. 
+ * For more information about the meanings of these attributes, check MultiGameScreen class
+ */
 public class Card {
 
 	int numberOfMoves;

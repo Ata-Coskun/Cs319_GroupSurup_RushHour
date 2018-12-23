@@ -1,27 +1,34 @@
+/*
+*	Author : Ata Coþkun, Zeynep Nur Öztürk, Muhammet Said Demir
+*/
+
 package rushHour;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.Stack;
 
+/*
+ * This is the engine of multi game. It updates the board with the info coming from it's screen
+ */
 public class MultiGameEngine extends GameEngine {
 
 	Board board;
-	Stack<Board> stack;
 	int level;
-	MultiGameScreen gameScreen;
+	// To indicate who's turn is this. True for player 1, False for 2
 	boolean turn;
+	// Cards of the players
 	Card[] cards1, cards2;
 	int choice;
+
+	// Amount of movements that a player can do. If it's 3, that means the player
+	// can move a car for 3 grids, or 1 car for 1 grid, another for 2 grid and etc.
+	// If it's -1, that means the player can move a single car for any number of
+	// grids that player wants
 	int numberOfMoves;
+
+	// To indicate whether the player can move the board or not
 	boolean shift;
-	Scanner scan = new Scanner(System.in);
 
-	public MultiGameEngine() {
-	}
-
-	public MultiGameEngine(Board board,int level) throws IOException {
+	public MultiGameEngine(Board board, int level) throws IOException {
 		this.board = board;
 		turn = false;
 		this.level = level;
@@ -36,48 +43,72 @@ public class MultiGameEngine extends GameEngine {
 		numberOfMoves = 0;
 		shift = false;
 
-		gameScreen = new MultiGameScreen(this);
+		new MultiGameScreen(this);
 
+		// It starts with turn swap for the player 1 to start and draw a card.
 		turnSwap();
 	}
 
 	@Override
 	boolean update(int i, int j, int iDragged, int jDragged) {
 
+		// If the player clicked on the movable parts of the board. Board's mid location
+		// cannot move.
 		if ((i >= 0 && i < 22 && iDragged >= 0 && iDragged < 22)) {
-			if (shift && ((j >= 0 && j < 5) || (j >= 9 && j < 14)) && board.coordinates[i][j] == 3 && i != iDragged) { // if shift is enabled
+
+			// if player tries to move the board
+			if (shift && ((j >= 0 && j < 5) || (j >= 9 && j < 14)) && board.coordinates[i][j] == 3 && i != iDragged)
 				shift = !board.moveBoard(i, j, iDragged);
-				System.out.println("axaxa");
-				// gameScreen.repaint();
-			} else if (board.coordinates[i][j] < 3) {
-				if (numberOfMoves == -1) { // if it's 1x
+
+			// if the player clicks within the board.
+			else if (board.coordinates[i][j] < 3) {
+
+				// if it's 1x
+				if (numberOfMoves == -1) {
 					if (board.moveCar(i, j, iDragged, jDragged, turn))
 						numberOfMoves = 0;
-					// gameScreen.repaint();
-				} else if (numberOfMoves > 0) { // if it has a number
-					if (Math.abs(i - iDragged) > numberOfMoves) { // if it moves vertically and more than numberOfMoves
-						if (i > iDragged) // if drag up
+				}
+
+				// if it has a limited number of movements
+				else if (numberOfMoves > 0) {
+
+					// if it moves vertically and more than numberOfMoves. Since the player can move
+					// maximum number of remaining number of moves
+					if (Math.abs(i - iDragged) > numberOfMoves)
+
+						// if drag up
+						if (i > iDragged)
 							iDragged = i - numberOfMoves;
-						else // if drag down
+
+						// if drag down
+						else
 							iDragged = i + numberOfMoves;
-					} else if (Math.abs(j - jDragged) > numberOfMoves) {// if it moves horizontally and more than
-																		// numberOfMoves
-						if (j > jDragged)// if drag right
+
+					// if it moves horizontally and more than numberOfMoves.
+
+					else if (Math.abs(j - jDragged) > numberOfMoves)
+						// if drag right
+						if (j > jDragged)
 							jDragged = j - numberOfMoves;
+						// if drag left
 						else
 							jDragged = j + numberOfMoves;
-					}
+
+					// finally, move the car and update the remaining number of moves
 					if (board.moveCar(i, j, iDragged, jDragged, turn))
 						numberOfMoves -= Math.max(Math.abs(i - iDragged), Math.abs(j - jDragged));
 				}
 			}
 		}
 
-		if (!shift && numberOfMoves == 0) 
+		// if the player got nothing left to do, turn swap.
+		if (!shift && numberOfMoves == 0)
 			turnSwap();
 		return true;
 	}
 
+	// removes the chosen card, creates a new card, then swaps the turn, makes the
+	// player choose a card
 	public void turnSwap() {
 		Card[] cards;
 		if (turn)
