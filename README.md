@@ -3,11 +3,11 @@ Section-1
 Name of The Group: GURUP ŞURUP 
 
 Members of Group Surup:
-1. Zeynep Nur Öztürk- 21501472
-2. Muhammet Said Demir - 21602021
-3. Ata Coşkun- 21503061
-4. Tarık Emin Kaplan- 21601737
-5. Asuman Aydın- 21502604
+1. Muhammet Said Demir - 21602021
+2. Ata Coşkun- 21503061
+3. Zeynep Nur Öztürk- 21501472
+4. Asuman Aydın- 21502604
+5. Tarık Emin Kaplan- 21601737
 
 Link for Trailer: https://www.youtube.com/watch?v=AMtTEIropKI&t=54s
 
